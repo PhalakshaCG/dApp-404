@@ -1,0 +1,24 @@
+.newpost-text::-webkit-scrollbar {
+  background-color: #D1F5FF;
+  border-radius: 10px;
+}
+
+.newpost-text::-webkit-scrollbar-thumb {
+	background: black;
+	border-radius: 10px
+  }
+
+.report{
+    transition: 0.5s;
+  }
+.report > span {
+    transition: 0.5s;
+  }
+
+.report:hover{
+  background-color: #E63A0B;
+}
+
+.report:hover span{
+  display:block
+}
