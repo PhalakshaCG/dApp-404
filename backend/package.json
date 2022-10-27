@@ -1,0 +1,31 @@
+{
+  "name": "restapi",
+  "version": "1.0.0",
+  "description": "restapi backend",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rav-coder/restAPI_blog.git"
+  },
+  "author": "Rav",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rav-coder/restAPI_blog/issues"
+  },
+  "homepage": "https://github.com/rav-coder/restAPI_blog#readme",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "express": "^4.17.2",
+    "mongodb": "^4.3.1",
+    "mongoose": "^6.2.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-stage-0": "^6.24.1"
+  }
+}
