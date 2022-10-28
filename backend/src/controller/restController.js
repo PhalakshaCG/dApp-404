@@ -27,13 +27,24 @@ export const getProfiles = (req, res) => {
 };
 
 export const getProfileByID = (req, res) => {
-  Profile.findById(req.params.publicID, (err, profile) => {
+  Profile.find({ public_id: req.params.profileID }, (err, profile) => {
     if (err) {
       res.send(err);
     }
 
     res.json(profile);
   });
+  // profile
+  //   .find()
+  //   .where("public_id")
+  //   .equals(req.params.profileID)
+  //   .exec((err, profile) => {
+  //     if (err) {
+  //       res.send(err);
+  //     }
+
+  //     res.json(profile);
+  //   });
 };
 
 export const updateProfileByID = (req, res) => {

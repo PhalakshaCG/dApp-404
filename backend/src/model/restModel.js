@@ -8,9 +8,11 @@ export const ProfileSchema = new schema({
 
     required: "Please enter a name.",
   },
+  // _id: false,
   public_id: {
     type: String,
     required: "Please enter a public address",
+    unique: true,
   },
   email: {
     type: String,
