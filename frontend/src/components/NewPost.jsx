@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import open from "../assets/open.svg";
 import Multiselect from "multiselect-react-dropdown";
+import post from "../helper/postToBlockchain";
+import { AuthContext } from "../context/AuthContext";
 // import arrow from "../assets/arrow.png";
 
 function NewPost() {
+  const context = useContext(AuthContext);
   const [heading, setHeading] = useState("");
   const [content, setContent] = useState("");
   const [tags, setTags] = useState([]);
@@ -38,7 +41,8 @@ function NewPost() {
 
   const submit = () => {
     console.log(heading, content, tags);
-    // post(heading, content, tags);
+    let _tags = tags.map((tag)=>tag.name)
+    post(context.contract, context.account,"NewsLang", _tags, heading, content);
     setHeading("");
     setContent("");
     setTags([]);
