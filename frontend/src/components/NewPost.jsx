@@ -1,15 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import open from "../assets/open.svg";
 import Multiselect from "multiselect-react-dropdown";
-import arrow from "../assets/arrow.png";
+// import arrow from "../assets/arrow.png";
 
 function NewPost() {
+  const [heading, setHeading] = useState("");
+  const [content, setContent] = useState("");
+  const [tags, setTags] = useState([]);
   const plainArray = [
-    "Option 1",
-    "Option 2",
-    "Option 3",
-    "Option 4",
-    "Option 5",
+    { name: "Option 1", id: 1 },
+    { name: "Option 2", id: 2 },
+    { name: "Option 3", id: 3 },
+    { name: "Option 4", id: 4 },
+    { name: "Option 5", id: 5 },
   ];
   var dropdown_style = {
     multiselectContainer: {},
@@ -25,6 +28,21 @@ function NewPost() {
     inputField: {},
     option: { color: "black" },
   };
+  const onSelect = (selectedList, selectedItem) => {
+    setTags(selectedList);
+  };
+
+  const onRemove = (selectedList, removedItem) => {
+    setTags(selectedList);
+  };
+
+  const submit = () => {
+    console.log(heading, content, tags);
+    setHeading("");
+    setContent("");
+    setTags([]);
+  };
+
   return (
     <div className="border-2 rounded-[69px] pt-10 pl-[6rem] pr-[4rem] pb-[2rem] mb-7">
       <div className="content flex flex-col">
@@ -33,6 +51,8 @@ function NewPost() {
             className="w-[70%] bg-inherit focus:outline-none border-b-black border-b-2 text-2xl text-[#D1F5FF]"
             type="text"
             placeholder="  Heading"
+            value={heading}
+            onChange={(e) => setHeading(e.target.value)}
           />
         </div>
         <div className="newpost my-5">
@@ -40,6 +60,8 @@ function NewPost() {
             className="newpost-text w-[90%] text-[#D1F5FF] bg-inherit focus:outline-none resize-none"
             rows="4"
             placeholder="  Describe you news here ..."
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
           ></textarea>
         </div>
       </div>
@@ -53,17 +75,24 @@ function NewPost() {
               className=""
               showArrow
               options={plainArray}
-              isObject={false}
+              isObject={true}
               placeholder="Add Tags"
               style={dropdown_style}
               avoidHighlightFirstOption={true}
               closeOnSelect={false}
               hidePlaceholder={true}
+              selectedValues={tags}
+              onSelect={onSelect}
+              onRemove={onRemove}
+              displayValue="name"
               // customArrow={true}
             />
           </div>
           <div className="submit">
-            <button className="bg-[#D1F5FF] rounded-[69px] px-5 py-2 text-[#E63A0B] font-bold">
+            <button
+              className="bg-[#D1F5FF] rounded-[69px] px-5 py-2 text-[#E63A0B] font-bold cursor-pointer"
+              onClick={submit}
+            >
               Post
             </button>
           </div>
