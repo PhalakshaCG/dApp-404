@@ -4,7 +4,7 @@ import logo from "../assets/logo.svg";
 import { NavLink } from "react-router-dom";
 
 function Navbar() {
-  const { login, isLoggedIn } = useContext(AuthContext);
+  const { login, logout, isLoggedIn } = useContext(AuthContext);
   const normalStyle = "hover:underline ";
   const activeStyle = "text-[#E63A0B]";
   return (
@@ -14,7 +14,7 @@ function Navbar() {
           <img className="w-10" src={logo} alt="" />
           <span className="text-xl">CheckMate</span>
         </div>
-        <div className="flex text-xl gap-8">
+        <nav className="flex text-xl gap-8">
           <NavLink
             className={({ isActive }) => {
               return isActive ? normalStyle + activeStyle : normalStyle;
@@ -39,7 +39,7 @@ function Navbar() {
           >
             Profile
           </NavLink>
-        </div>
+        </nav>
       </div>
       {!isLoggedIn() ? (
         <div
@@ -49,7 +49,12 @@ function Navbar() {
           Login
         </div>
       ) : (
-        <></>
+        <div
+          className={normalStyle + activeStyle + " text-2xl cursor-pointer"}
+          onClick={logout}
+        >
+          Logout
+        </div>
       )}
     </div>
   );

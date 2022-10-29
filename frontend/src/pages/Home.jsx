@@ -20,7 +20,7 @@ function Home() {
           name: "tag1",
         },
         {
-          id: 2,
+          id: 3,
           name: "tag1",
         },
       ],
@@ -62,7 +62,7 @@ function Home() {
     },
   ];
   return (
-    <>
+    <div>
       <div className="px-[4vw]">
         <NewPost />
       </div>
@@ -70,17 +70,16 @@ function Home() {
       <div className="posts mt-5 px-[4vw]">
         {posts.map((post) => {
           return (
-            <div key={posts.id} className="post">
-              <Post
-                title={post.title}
-                description={post.description}
-                tags={post.tags}
-              />
-            </div>
+            <Post
+              key={post.id}
+              title={post.title}
+              description={post.description}
+              tags={post.tags}
+            />
           );
         })}
       </div>
-    </>
+    </div>
   );
 }
 
