@@ -38,6 +38,7 @@ function NewPost() {
 
   const submit = () => {
     console.log(heading, content, tags);
+    // post(heading, content, tags);
     setHeading("");
     setContent("");
     setTags([]);
