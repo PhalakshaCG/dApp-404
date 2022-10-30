@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import NewPost from "../components/NewPost";
 import "../static/Common.css";
 import Post from "../components/Post";
+import ConfirmPost from "../components/ConfirmPost";
+import Maximized from "../components/Maximized";
 
 function Home() {
   let posts = [
@@ -61,26 +63,60 @@ function Home() {
       ],
     },
   ];
-  return (
-    <div>
-      <div className="px-[4vw]">
-        <NewPost />
+  const [confirmPost, setConfirmPost] = useState(false);
+  const [maximizedPost, setMaximizedPost] = useState(false);
+  const [PostData, setPostData] = useState({});
+  if (!confirmPost && !maximizedPost) {
+    return (
+      <div>
+        <div className="px-[4vw]">
+          <NewPost
+            setConfirmPost={setConfirmPost}
+            setMaximizedPost={setMaximizedPost}
+            PostData={PostData}
+            setPostData={setPostData}
+          />
+        </div>
+        <hr />
+        <div className="posts mt-5 px-[4vw]">
+          {posts.map((post) => {
+            return (
+              <Post
+                key={post.id}
+                title={post.title}
+                description={post.description}
+                tags={post.tags}
+              />
+            );
+          })}
+        </div>
       </div>
-      <hr />
-      <div className="posts mt-5 px-[4vw]">
-        {posts.map((post) => {
-          return (
-            <Post
-              key={post.id}
-              title={post.title}
-              description={post.description}
-              tags={post.tags}
+    );
+  } else {
+    return (
+      <>
+        {confirmPost ? (
+          <div className="px-[4vw]">
+            <ConfirmPost
+              setConfirmPost={setConfirmPost}
+              setMaximizedPost={setMaximizedPost}
+              PostData={PostData}
+              setPostData={setPostData}
             />
-          );
-        })}
-      </div>
-    </div>
-  );
+          </div>
+        ) : (
+          <div className="px-[4vw]">
+            <Maximized
+              setConfirmPost={setConfirmPost}
+              setMaximizedPost={setMaximizedPost}
+              PostData={PostData}
+              setPostData={setPostData}
+            />
+          </div>
+        )}
+      </>
+    );
+  }
 }
 
 export default Home;
