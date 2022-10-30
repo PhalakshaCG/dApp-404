@@ -41,7 +41,7 @@ function NewPost() {
 
   const submit = () => {
     console.log(heading, content, tags);
-    let _tags = tags.map((tag)=>tag.name)
+    let _tags = tags.map((tag)=>tag.id)
     post(context.contract, context.account,"NewsLang", _tags, heading, content);
     setHeading("");
     setContent("");
