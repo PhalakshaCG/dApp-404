@@ -4,8 +4,11 @@ import "../static/Common.css";
 import Post from "../components/Post";
 import ConfirmPost from "../components/ConfirmPost";
 import Maximized from "../components/Maximized";
-
+import getPostByTags from "../helper/getPostsByTags";
+import { AuthContext } from "../context/AuthContext";
+import { useContext } from "react";
 function Home() {
+  const context = useContext(AuthContext);
   // let posts = [
   //   {
   //     id: 1,

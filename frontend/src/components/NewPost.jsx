@@ -3,7 +3,7 @@ import open from "../assets/open.svg";
 import Multiselect from "multiselect-react-dropdown";
 import { useEffect } from "react";
 import { AuthContext } from "../context/AuthContext";
-
+import postToBlockchain from "../helper/postToBlockchain";
 function NewPost({ setConfirmPost, setMaximizedPost, PostData, setPostData }) {
   const context = useContext(AuthContext);
   const [heading, setHeading] = useState("");
@@ -117,7 +117,7 @@ function NewPost({ setConfirmPost, setMaximizedPost, PostData, setPostData }) {
                 });
                 console.log(heading, content, tags);
                 let _tags = tags.map((tag)=>tag.id)
-                post(context.contract, context.account,"NewsLang", _tags, heading, content);
+                postToBlockchain(context.contract, context.account,"NewsLang", _tags, heading, content);
                 setHeading("");
                 setContent("");
                 setTags([]);
