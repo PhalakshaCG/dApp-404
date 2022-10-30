@@ -1,24 +1,79 @@
 .newpost-text::-webkit-scrollbar {
-  background-color: #D1F5FF;
+  background-color: #d1f5ff;
   border-radius: 10px;
 }
 
 .newpost-text::-webkit-scrollbar-thumb {
-	background: black;
-	border-radius: 10px
-  }
-
-.report{
-    transition: 0.5s;
-  }
-.report > span {
-    transition: 0.5s;
-  }
-
-.report:hover{
-  background-color: #E63A0B;
+  background: black;
+  border-radius: 10px;
 }
 
-.report:hover span{
-  display:block
+.report {
+  transition: 0.5s;
+}
+.report > span {
+  transition: 0.5s;
+}
+
+.report:hover {
+  background-color: #e63a0b;
+}
+
+.report:hover span {
+  display: block;
+}
+
+.skeleton-zqe70d35vkl:empty {
+  position: relative;
+  height: 400px;
+  background-color: inherit;
+  border-radius: 0px 0px 0px 0px;
+  background-image: linear-gradient(#f5f7f9 6px, transparent 0),
+    linear-gradient(#f5f7f9 6px, transparent 0),
+    linear-gradient(#f5f7f9 6px, transparent 0),
+    linear-gradient(#f5f7f9 6px, transparent 0),
+    linear-gradient(#f5f7f9 6px, transparent 0),
+    radial-gradient(circle 20px at 20px 20px, #f5f7f9 99%, transparent 0);
+  background-repeat: repeat-y;
+  background-size: 43% 133px, 90% 133px, 74% 133px, 52px 133px, 88px 133px,
+    40px 133px;
+  background-position: 12px 111px, 12px 92px, 12px 73px, 59px 39px, 59px 21px,
+    12px 12px;
+}
+.skeleton-zqe70d35vkl:empty:before {
+  content: " ";
+  position: absolute;
+  z-index: 1000;
+  width: 100%;
+  height: 400px;
+  -webkit-mask-image: linear-gradient(
+    100deg,
+    rgba(255, 255, 255, 0),
+    rgba(255, 255, 255, 0.5) 50%,
+    rgba(255, 255, 255, 0) 80%
+  );
+  -webkit-mask-repeat: repeat-y;
+  -webkit-mask-size: 50px 400px;
+  -webkit-mask-position: -20% 0;
+  background-image: linear-gradient(rgba(102, 102, 102, 1) 6px, transparent 0),
+    linear-gradient(rgba(102, 102, 102, 1) 6px, transparent 0),
+    linear-gradient(rgba(102, 102, 102, 1) 6px, transparent 0),
+    linear-gradient(rgba(102, 102, 102, 1) 6px, transparent 0),
+    linear-gradient(rgba(102, 102, 102, 1) 6px, transparent 0),
+    radial-gradient(
+      circle 20px at 20px 20px,
+      rgba(102, 102, 102, 1) 99%,
+      transparent 0
+    );
+  background-repeat: repeat-y;
+  background-size: 43% 133px, 90% 133px, 74% 133px, 52px 133px, 88px 133px,
+    40px 133px;
+  background-position: 12px 111px, 12px 92px, 12px 73px, 59px 39px, 59px 21px,
+    12px 12px;
+  animation: shineForSkeleton-zqe70d35vkl 2s infinite;
+}
+@keyframes shineForSkeleton-zqe70d35vkl {
+  to {
+    -webkit-mask-position: 120% 0;
+  }
 }

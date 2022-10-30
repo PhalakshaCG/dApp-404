@@ -1,11 +1,10 @@
 import React, { useState, useContext } from "react";
 import open from "../assets/open.svg";
 import Multiselect from "multiselect-react-dropdown";
-import post from "../helper/postToBlockchain";
+import { useEffect } from "react";
 import { AuthContext } from "../context/AuthContext";
-// import arrow from "../assets/arrow.png";
 
-function NewPost() {
+function NewPost({ setConfirmPost, setMaximizedPost, PostData, setPostData }) {
   const context = useContext(AuthContext);
   const [heading, setHeading] = useState("");
   const [content, setContent] = useState("");
@@ -17,6 +16,14 @@ function NewPost() {
     { name: "Option 4", id: 4 },
     { name: "Option 5", id: 5 },
   ];
+
+  useEffect(() => {
+    if (PostData) {
+      setHeading(PostData.heading);
+      setContent(PostData.content);
+      setTags(PostData.tags);
+    }
+  }, [PostData]);
   var dropdown_style = {
     multiselectContainer: {},
     optionContainer: { backgroundColor: "#D1F5FF" },
@@ -37,15 +44,6 @@ function NewPost() {
 
   const onRemove = (selectedList, removedItem) => {
     setTags(selectedList);
-  };
-
-  const submit = () => {
-    console.log(heading, content, tags);
-    let _tags = tags.map((tag)=>tag.id)
-    post(context.contract, context.account,"NewsLang", _tags, heading, content);
-    setHeading("");
-    setContent("");
-    setTags([]);
   };
 
   return (
@@ -72,8 +70,21 @@ function NewPost() {
       </div>
       <div className="options">
         <div className="flex flex-row justify-between items-center">
-          <div className="pl-3">
-            <img className="w-6" src={open} alt="" />
+          <div className="pl-3 cursor-pointer">
+            <img
+              className="w-6"
+              src={open}
+              alt=""
+              onClick={() => {
+                setMaximizedPost(true);
+                setConfirmPost(false);
+                setPostData({
+                  heading: heading,
+                  content: content,
+                  tags: tags,
+                });
+              }}
+            />
           </div>
           <div className="tags mx-7">
             <Multiselect
@@ -96,7 +107,21 @@ function NewPost() {
           <div className="submit">
             <button
               className="bg-[#D1F5FF] rounded-[69px] px-5 py-2 text-[#E63A0B] font-bold cursor-pointer"
-              onClick={submit}
+              onClick={() => {
+                setConfirmPost(true);
+                setMaximizedPost(false);
+                setPostData({
+                  heading: heading,
+                  content: content,
+                  tags: tags,
+                });
+                console.log(heading, content, tags);
+                let _tags = tags.map((tag)=>tag.id)
+                post(context.contract, context.account,"NewsLang", _tags, heading, content);
+                setHeading("");
+                setContent("");
+                setTags([]);
+              }}
             >
               Post
             </button>

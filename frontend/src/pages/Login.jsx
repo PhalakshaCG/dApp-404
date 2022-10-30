@@ -9,7 +9,9 @@ function Home() {
         <NewPost />
       </div>
       <hr />
-      <div className="posts mt-5 px-[4vw]"></div>
+      <div className="posts mt-5 px-[4vw] pl-[9vw] opacity-40">
+        <div className="skeleton-zqe70d35vkl">{false && <div></div>}</div>
+      </div>
     </>
   );
 }
