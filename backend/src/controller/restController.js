@@ -5,6 +5,8 @@ import { ProfileSchema } from "../model/restModel.js";
 const Profile = mongoose.model("Profile", ProfileSchema);
 
 export const addProfile = (req, res) => {
+  // console.log(req.body);
+  // TODO: Make public address small letters
   let newProfile = new Profile(req.body);
 
   newProfile.save((err, profile) => {
@@ -27,11 +29,11 @@ export const getProfiles = (req, res) => {
 };
 
 export const getProfileByID = (req, res) => {
-  Profile.find({ public_id: req.params.profileID }, (err, profile) => {
+  Profile.findOne({ public_id: req.params.profileID }, (err, profile) => {
     if (err) {
       res.send(err);
     }
-
+    console.log(profile);
     res.json(profile);
   });
   // profile

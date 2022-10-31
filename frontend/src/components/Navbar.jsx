@@ -1,12 +1,23 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { AuthContext } from "../context/AuthContext";
 import logo from "../assets/logo.svg";
 import { NavLink } from "react-router-dom";
+import { useState } from "react";
 
 function Navbar() {
-  const { login, logout, isLoggedIn } = useContext(AuthContext);
+  const { login, logout, isLoggedIn, getUser } = useContext(AuthContext);
+
   const normalStyle = "hover:underline ";
   const activeStyle = "text-[#E63A0B]";
+  const [user, setUser] = useState("");
+
+  useEffect(() => {
+    if (isLoggedIn()) {
+      const user = getUser();
+      setUser(user?.name);
+    }
+  }, [isLoggedIn, getUser]);
+
   return (
     <div className="flex justify-between items-center between pt-[0.5vh] mb-[4rem]">
       <div className="flex items-center gap-20 ">
@@ -53,7 +64,7 @@ function Navbar() {
           className={normalStyle + activeStyle + " text-2xl cursor-pointer"}
           onClick={logout}
         >
-          Logout
+          {user}
         </div>
       )}
     </div>

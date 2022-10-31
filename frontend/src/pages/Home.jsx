@@ -7,77 +7,37 @@ import Maximized from "../components/Maximized";
 import getPostByTags from "../helper/getPostsByTags";
 import { AuthContext } from "../context/AuthContext";
 import { useContext } from "react";
+import { useEffect } from "react";
+import Signup from "./Signup";
 function Home() {
-  const context = useContext(AuthContext);
-  // let posts = [
-  //   {
-  //     id: 1,
-  //     title: "Post 1",
-  //     description:
-  //       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus illum repellat ullam aspernatur sed impedit excepturi dolorum, quasi velit vel in nesciunt, pariatur dolores ab temporibus dolor officia, iste recusandae?",
-  //     tags: [
-  //       {
-  //         id: 1,
-  //         name: "tag1",
-  //       },
-  //       {
-  //         id: 2,
-  //         name: "tag1",
-  //       },
-  //       {
-  //         id: 3,
-  //         name: "tag1",
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     id: 2,
-  //     title: "Post 1",
-  //     description:
-  //       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus illum repellat ullam aspernatur sed impedit excepturi dolorum, quasi velit vel in nesciunt, pariatur dolores ab temporibus dolor officia, iste recusandae?",
-  //     tags: [],
-  //   },
-  //   {
-  //     id: 3,
-  //     title: "Post 1",
-  //     description:
-  //       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus illum repellat ullam aspernatur sed impedit excepturi dolorum, quasi velit vel in nesciunt, pariatur dolores ab temporibus dolor officia, iste recusandae?",
-  //     tags: [
-  //       {
-  //         id: 1,
-  //         name: "tag1",
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     id: 4,
-  //     title: "Post 1",
-  //     description:
-  //       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus illum repellat ullam aspernatur sed impedit excepturi dolorum, quasi velit vel in nesciunt, pariatur dolores ab temporibus dolor officia, iste recusandae?",
-  //     tags: [
-  //       {
-  //         id: 1,
-  //         name: "tag1",
-  //       },
-  //       {
-  //         id: 2,
-  //         name: "tag1",
-  //       },
-  //     ],
-  //   },
-  // ];
-  const tags = [1,2,3,4,5]
+  const { contract, isLoggedIn, getUser } = useContext(AuthContext);
+  const tags = [1, 2, 3, 4, 5];
   const [posts, setPosts] = useState([]);
-  getPostByTags(context.contract, tags, 10).then((_posts)=>{
-    setPosts(_posts);
-  })
+
+  useEffect(() => {
+    if (true) {
+      setRegister(true);
+    }
+    getPostByTags(contract, tags, 10).then((_posts) => {
+      setPosts(_posts);
+    });
+  }, [isLoggedIn]);
+
+  const [register, setRegister] = useState(false);
   const [confirmPost, setConfirmPost] = useState(false);
   const [maximizedPost, setMaximizedPost] = useState(false);
   const [PostData, setPostData] = useState({});
+  if (register) {
+    return (
+      <>
+        <Signup setRegister />
+      </>
+    );
+  }
   if (!confirmPost && !maximizedPost) {
     return (
-      <div>
-        <div className="px-[4vw]">
+      <div className="px-[4vw]" key="1">
+        <div className="">
           <NewPost
             setConfirmPost={setConfirmPost}
             setMaximizedPost={setMaximizedPost}
@@ -86,18 +46,19 @@ function Home() {
           />
         </div>
         <hr />
-        <div className="posts mt-5 px-[4vw]">
+        <div className="posts mt-5 ">
           {posts.map((post) => {
-            if(post.title){
+            if (post.title) {
               return (
-              <Post
-                key={post.id}
-                title={post.title}
-                description={post.description}
-                tags={post.tags}
-              />
-            );
+                <Post
+                  key={post.id}
+                  title={post.title}
+                  description={post.description}
+                  tags={post.tags}
+                />
+              );
             }
+            return <></>;
           })}
         </div>
       </div>
@@ -106,7 +67,7 @@ function Home() {
     return (
       <>
         {confirmPost ? (
-          <div className="px-[4vw]">
+          <div key="2" className="px-[4vw]">
             <ConfirmPost
               setConfirmPost={setConfirmPost}
               setMaximizedPost={setMaximizedPost}
@@ -115,7 +76,7 @@ function Home() {
             />
           </div>
         ) : (
-          <div className="px-[4vw]">
+          <div key="3" className="px-[4vw]">
             <Maximized
               setConfirmPost={setConfirmPost}
               setMaximizedPost={setMaximizedPost}

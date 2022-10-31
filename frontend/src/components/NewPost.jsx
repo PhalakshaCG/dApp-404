@@ -6,9 +6,9 @@ import { AuthContext } from "../context/AuthContext";
 import postToBlockchain from "../helper/postToBlockchain";
 function NewPost({ setConfirmPost, setMaximizedPost, PostData, setPostData }) {
   const context = useContext(AuthContext);
-  const [heading, setHeading] = useState("");
-  const [content, setContent] = useState("");
-  const [tags, setTags] = useState([]);
+  const [heading, setHeading] = useState(PostData?.heading);
+  const [content, setContent] = useState(PostData?.content);
+  const [tags, setTags] = useState(PostData?.tags);
   const plainArray = [
     { name: "Option 1", id: 1 },
     { name: "Option 2", id: 2 },
@@ -19,9 +19,9 @@ function NewPost({ setConfirmPost, setMaximizedPost, PostData, setPostData }) {
 
   useEffect(() => {
     if (PostData) {
-      setHeading(PostData.heading);
-      setContent(PostData.content);
-      setTags(PostData.tags);
+      // setHeading();
+      // setContent();
+      // setTags();
     }
   }, [PostData]);
   var dropdown_style = {
@@ -116,8 +116,15 @@ function NewPost({ setConfirmPost, setMaximizedPost, PostData, setPostData }) {
                   tags: tags,
                 });
                 console.log(heading, content, tags);
-                let _tags = tags.map((tag)=>tag.id)
-                postToBlockchain(context.contract, context.account,"NewsLang", _tags, heading, content);
+                let _tags = tags.map((tag) => tag.id);
+                postToBlockchain(
+                  context.contract,
+                  context.account,
+                  "NewsLang",
+                  _tags,
+                  heading,
+                  content
+                );
                 setHeading("");
                 setContent("");
                 setTags([]);

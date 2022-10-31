@@ -45,7 +45,7 @@ function ConfirmPost({
   }, [PostData]);
 
   const submit = () => {
-    console.log(heading, content, tags);
+    // console.log(heading, content, tags);
     let _tags = tags.map((tag) => tag.name);
     post(
       context.contract,

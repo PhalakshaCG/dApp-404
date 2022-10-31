@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 dotenv.config();
-
+import cors from "cors";
 import allRoutes from "./src/route/restRoute.js";
 
 import mongoose from "mongoose";
@@ -17,6 +17,12 @@ mongoose.connect(process.env.URL, {
   useUnifiedTopology: true,
 });
 
+app.use(
+  cors({
+    credentials: true,
+    origin: ["http://localhost:3000", process.env.APP_URL],
+  })
+);
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
