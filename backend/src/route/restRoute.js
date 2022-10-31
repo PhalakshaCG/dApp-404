@@ -4,6 +4,7 @@ import {
   getProfileByID,
   updateProfileByID,
   deleteProfileByID,
+  checkProfile,
 } from "../controller/restController.js";
 
 const allRoutes = (app) => {
@@ -22,6 +23,10 @@ const allRoutes = (app) => {
     .delete(deleteProfileByID)
 
     .put(updateProfileByID);
+  app
+    .route("/profile/check/:publicAddress")
+
+    .get(checkProfile);
 };
 
 export default allRoutes;
