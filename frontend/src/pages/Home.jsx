@@ -10,14 +10,22 @@ import { useContext } from "react";
 import { useEffect } from "react";
 import Signup from "./Signup";
 function Home() {
-  const { contract, isLoggedIn, getUser } = useContext(AuthContext);
+  const { contract, isLoggedIn, getPA } = useContext(AuthContext);
   const tags = [1, 2, 3, 4, 5];
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    if (true) {
-      setRegister(true);
+    async function checkProfile() {
+      fetch("http://localhost:4000/profile/check/" + getPA())
+        .then((res) => res.json())
+        .then((data) => {
+          setRegister(!data);
+        });
     }
+    checkProfile();
+    // if (true) {
+    //   setRegister(true);
+    // }
     getPostByTags(contract, tags, 10).then((_posts) => {
       setPosts(_posts);
     });
@@ -30,7 +38,7 @@ function Home() {
   if (register) {
     return (
       <>
-        <Signup setRegister />
+        <Signup setRegister={setRegister} />
       </>
     );
   }

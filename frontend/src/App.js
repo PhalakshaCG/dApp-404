@@ -5,6 +5,7 @@ import Navbar from "./components/Navbar"
 import Home from "./pages/Home"
 import Login from "./pages/Login"
 import Profile from "./pages/Profile"
+import Search from "./pages/Search"
 
 export default function App() {
   const { isLoggedIn } = useContext(AuthContext)
@@ -14,6 +15,7 @@ export default function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/search" element={<Search />} />
           <Route path="/profile" element={<Profile />} />
         </Routes>
       </div>
