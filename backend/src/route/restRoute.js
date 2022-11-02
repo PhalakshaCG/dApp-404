@@ -5,6 +5,9 @@ import {
   updateProfileByID,
   deleteProfileByID,
   checkProfile,
+  addTags,
+  getAllTags,
+  updateTags,
 } from "../controller/restController.js";
 
 const allRoutes = (app) => {
@@ -27,6 +30,14 @@ const allRoutes = (app) => {
     .route("/profile/check/:publicAddress")
 
     .get(checkProfile);
+  app
+    .route("/tags")
+
+    .get(getAllTags)
+
+    .post(addTags)
+
+    .put(updateTags);
 };
 
 export default allRoutes;
