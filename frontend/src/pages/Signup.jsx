@@ -1,5 +1,5 @@
 import { AuthContext } from "../context/AuthContext";
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import "../static/Common.css";
 
 import Multiselect from "multiselect-react-dropdown";
@@ -8,13 +8,25 @@ function Signup({ setRegister }) {
   const [tags, setTags] = useState([]);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const plainArray = [
+  const [plainArray, setPlainArray] = useState([
     { name: "Option 1", id: 1 },
     { name: "Option 2", id: 2 },
     { name: "Option 3", id: 3 },
     { name: "Option 4", id: 4 },
     { name: "Option 5", id: 5 },
-  ];
+  ]);
+
+  useEffect(() => {
+    const getTags = async () => {
+      fetch("http://localhost:4000/tags")
+        .then((res) => res.json())
+        .then((data) => {
+          setPlainArray(data);
+        });
+    };
+    getTags();
+  }, []);
+
   const { getPA, SetUser } = useContext(AuthContext);
   var dropdown_style = {
     multiselectContainer: {},

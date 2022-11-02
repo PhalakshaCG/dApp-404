@@ -98,7 +98,7 @@ export const addTags = (req, res) => {
   });
 };
 export const getAllTags = (req, res) => {
-  Tag.find({ _id: "63622119a18d6735a109cef8" }, (err, tag) => {
+  Tag.find({}, (err, tag) => {
     if (err) {
       res.send(err);
     }
@@ -122,4 +122,14 @@ export const updateTags = (req, res) => {
       res.json(tag);
     }
   );
+};
+
+export const Delete = (req, res) => {
+  Tag.deleteMany({}, (err, tag) => {
+    if (err) {
+      res.send(err);
+    }
+
+    res.json({ message: "The tag was deleted." });
+  });
 };

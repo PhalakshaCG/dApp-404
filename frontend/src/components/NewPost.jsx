@@ -9,20 +9,24 @@ function NewPost({ setConfirmPost, setMaximizedPost, PostData, setPostData }) {
   const [heading, setHeading] = useState(PostData?.heading);
   const [content, setContent] = useState(PostData?.content);
   const [tags, setTags] = useState(PostData?.tags);
-  const plainArray = [
+  const [plainArray, setPlainArray] = useState([
     { name: "Option 1", id: 1 },
     { name: "Option 2", id: 2 },
     { name: "Option 3", id: 3 },
     { name: "Option 4", id: 4 },
     { name: "Option 5", id: 5 },
-  ];
+  ]);
 
   useEffect(() => {
-    if (PostData) {
-      // setHeading();
-      // setContent();
-      // setTags();
-    }
+    const getTags = async () => {
+      fetch("http://localhost:4000/tags")
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          setPlainArray(data);
+        });
+    };
+    getTags();
   }, [PostData]);
   var dropdown_style = {
     multiselectContainer: {},
@@ -117,17 +121,17 @@ function NewPost({ setConfirmPost, setMaximizedPost, PostData, setPostData }) {
                 });
                 console.log(heading, content, tags);
                 let _tags = tags.map((tag) => tag.id);
-                postToBlockchain(
-                  context.contract,
-                  context.account,
-                  "NewsLang",
-                  _tags,
-                  heading,
-                  content
-                );
-                setHeading("");
-                setContent("");
-                setTags([]);
+                // postToBlockchain(
+                //   context.contract,
+                //   context.account,
+                //   "NewsLang",
+                //   _tags,
+                //   heading,
+                //   content
+                // );
+                // setHeading("");
+                // setContent("");
+                // setTags([]);
               }}
             >
               Post

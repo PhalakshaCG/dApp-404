@@ -11,13 +11,13 @@ function Maximized({
   const [heading, setHeading] = useState("");
   const [content, setContent] = useState("");
   const [tags, setTags] = useState([]);
-  const plainArray = [
+  const [plainArray, setPlainArray] = useState([
     { name: "Option 1", id: 1 },
     { name: "Option 2", id: 2 },
     { name: "Option 3", id: 3 },
     { name: "Option 4", id: 4 },
     { name: "Option 5", id: 5 },
-  ];
+  ]);
 
   var dropdown_style = {
     multiselectContainer: {},
@@ -35,6 +35,14 @@ function Maximized({
   };
 
   useEffect(() => {
+    const getTags = async () => {
+      fetch("http://localhost:4000/tags")
+        .then((res) => res.json())
+        .then((data) => {
+          setPlainArray(data);
+        });
+    };
+    getTags();
     if (PostData.heading) {
       setHeading(PostData.heading);
       setContent(PostData.content);

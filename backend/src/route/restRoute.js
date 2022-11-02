@@ -8,6 +8,7 @@ import {
   addTags,
   getAllTags,
   updateTags,
+  Delete
 } from "../controller/restController.js";
 
 const allRoutes = (app) => {
@@ -38,6 +39,7 @@ const allRoutes = (app) => {
     .post(addTags)
 
     .put(updateTags);
+  app.route("/tags/delete").get(Delete);
 };
 
 export default allRoutes;
