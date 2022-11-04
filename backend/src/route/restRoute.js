@@ -8,7 +8,8 @@ import {
   addTags,
   getAllTags,
   updateTags,
-  Delete
+  Delete,
+  getusertags,
 } from "../controller/restController.js";
 
 const allRoutes = (app) => {
@@ -31,6 +32,10 @@ const allRoutes = (app) => {
     .route("/profile/check/:publicAddress")
 
     .get(checkProfile);
+  app
+    .route("/profile/getusertags/:profileID")
+
+    .get(getusertags);
   app
     .route("/tags")
 
