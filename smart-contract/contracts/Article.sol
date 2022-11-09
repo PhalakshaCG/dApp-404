@@ -3,11 +3,14 @@ pragma solidity ^0.8.9;
 
 contract Article {
     uint32 constant tagCount = 7;
-    address owner;
-    uint256[tagCount] public postCount;
-    uint256 payPerInteraction = 1e18;
+    address private owner;
+    uint256[tagCount] public postCount; // tag 0 reserved for reports
+    uint256 public reportCount = 0;
+    uint256 payPerInteraction = 1e6;
+    uint256 penaltyPerInteraction = 1e12;
 
     mapping(uint256 => Post)[tagCount] public Posts;
+    mapping(uint256 => Report) public Reports;
 
     fallback() external payable {}
     receive() external payable{}
@@ -23,8 +26,24 @@ contract Article {
         uint256 timestamp
     );
 
+    event refuteArticle(
+        uint32 tag,
+        uint256 id,
+        uint penalty
+    );
+
+    struct Report {
+        uint id;
+        bool isArchived;
+        uint8 reportPostTag;
+        uint reportPostID;
+        address[] confirmations;
+        address[] refutations;
+    }
     struct Post {
         uint id;
+        bool isReportPost;
+        bool truth;
         address payable from;
         string newsLang; 
         uint32 tag; 
@@ -33,14 +52,29 @@ contract Article {
         uint256 timestamp;
         uint256 rating;
         uint32 interactions;
-        uint8 reports;
+        uint256[] reports;
     }
 
+    // *
     // * Functions for posting
+    // *
     function postArticle(address payable from, string memory newsLang, uint32 tag, string memory headline, string memory content, uint256 rating) public {
         require(tag<tagCount && tag>=0, "Ivalid tag");
 
-        Posts[tag][postCount[tag]] = Post(postCount[tag], from, newsLang, tag, headline, content, block.timestamp, rating, 0, 0);
+        Posts[tag][postCount[tag]] = Post(
+            postCount[tag],
+            false,
+            true,
+            from, 
+            newsLang, 
+            tag, 
+            headline, 
+            content, 
+            block.timestamp, 
+            rating, 
+            0, 
+            new uint256[](0)
+        );
         postCount[tag]++;
         
         emit post(from, newsLang, tag, headline, content, block.timestamp);
@@ -49,7 +83,7 @@ contract Article {
     function withdraw(uint256 id, uint32 tag) payable public {
         Post memory current = Posts[tag][id];
         require(current.from == msg.sender, "You are not the owner of this post");
-
+        require(Posts[tag][id].truth, "This post has been flagged false");
         Posts[tag][id].from.transfer(current.interactions*payPerInteraction);
     }
 
@@ -62,9 +96,9 @@ contract Article {
         do{
             uint32 random = uint32(uint(keccak256(abi.encodePacked(block.timestamp,block.difficulty, msg.sender))) % tags.length);
             randTag = tags[random];
-        } while(postCount[randTag]==0);
-
-        randIndex = uint(keccak256(abi.encodePacked(block.timestamp,block.difficulty, msg.sender))) % postCount[randTag];
+            randIndex = uint(keccak256(abi.encodePacked(block.timestamp,block.difficulty, msg.sender))) % postCount[randTag];
+        } while(postCount[randTag]==0 && Posts[randTag][randIndex].truth);
+       
         Posts[randTag][randIndex].interactions++;
         return Posts[randTag][randIndex];
     }
@@ -75,8 +109,71 @@ contract Article {
         return Posts[tag][id];
     }
 
+    // Report
+    function reportArticle(uint8 reportPostTag, uint256 reportPostID,address payable from, string memory newsLang, string memory headline, string memory content, uint256 rating) public {
+        require(rating>85e6,"Rating must be greater than 85%");
+
+        Posts[0][reportCount] = Post(
+            reportCount,
+            true,
+            true,
+            from, 
+            newsLang, 
+            0, 
+            headline, 
+            content, 
+            block.timestamp, 
+            rating, 
+            0, 
+            new uint256[](0)
+        );
+
+        Reports[reportCount] = Report(
+            reportCount,
+            false,
+            reportPostTag,
+            reportPostID,
+            new address[](0),
+            new address[](0)
+        );
+        Posts[reportPostTag][reportPostID].reports.push(reportCount);
+        reportCount++;
+
+        emit post(from, newsLang, 0, headline, content, block.timestamp);
+    }
+
+    function confirmReport(uint256 id) public {
+        require(msg.sender!=Posts[0][id].from);
+        require(!includes(msg.sender, Reports[id].confirmations));
+        Reports[id].confirmations.push(msg.sender);
+        if(Reports[id].confirmations.length==10){
+            uint penalty = penaltyPerInteraction*Posts[Reports[id].reportPostTag][Reports[id].reportPostID].interactions;
+            emit refuteArticle(
+                Reports[id].reportPostTag,
+                Reports[id].reportPostID,
+                penalty
+            );
+            Posts[Reports[id].reportPostTag][Reports[id].reportPostID].truth = false;
+        }
+    }
+
+    function refuteReport(uint256 id) public {
+        require(!includes(msg.sender, Reports[id].refutations));
+        Reports[id].refutations.push(msg.sender);
+        if(Reports[id].refutations.length==10){
+            uint penalty = penaltyPerInteraction*Posts[0][id].interactions;
+            emit refuteArticle(
+                0,
+                id,
+                penalty
+            );
+            Posts[0][id].truth = false;
+            Reports[id].isArchived = true;
+        }
+    }
+
     // Utility functions
-    function includes(uint32 value, uint32[] memory array) private pure returns(bool) {
+    function includes(address value,address[] memory array) private pure returns(bool) {
         for(uint32 i = 0; i<array.length; i++){
             if(value == array[i])
                 return true;
