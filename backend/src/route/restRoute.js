@@ -11,6 +11,11 @@ import {
   Delete,
   getusertags,
 } from "../controller/restController.js";
+import {
+  addPost,
+  getUserPosts,
+  deleteUserPosts,
+} from "../controller/postController.js";
 
 const allRoutes = (app) => {
   app
@@ -44,7 +49,23 @@ const allRoutes = (app) => {
     .post(addTags)
 
     .put(updateTags);
-  app.route("/tags/delete").get(Delete);
+  app
+
+    .route("/tags/delete")
+
+    .get(Delete);
+  app
+    .route("/post/addpost")
+
+    .post(addPost);
+  app
+    .route("/post/getuserposts/:userid")
+
+    .get(getUserPosts);
+  app
+    .route("/post/deleteuserposts/:userid")
+
+    .delete(deleteUserPosts);
 };
 
 export default allRoutes;
