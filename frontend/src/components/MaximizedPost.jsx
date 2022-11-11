@@ -3,7 +3,12 @@ import report from "../assets/report.svg";
 import _ from "lodash";
 import close from "../assets/close.svg";
 
-function Maximized({ setMaximizedPost, PostData }) {
+function MaximizedPost({
+  setMaximizedPost,
+  PostData,
+  setPostData,
+  setReportPost,
+}) {
   const [heading, setHeading] = useState("");
   const [count, setCount] = useState(2);
   const [content, setContent] = useState("");
@@ -30,7 +35,18 @@ function Maximized({ setMaximizedPost, PostData }) {
             }}
           />
         </div>
-        <div className=" flex gap-8  border-1 rounded-[69px] report py-1 px-3 mr-1 transition ease-in-out duration-75">
+        <div
+          className="cursor-pointer flex gap-8  border-1 rounded-[69px] report py-1 px-3 mr-1 transition ease-in-out duration-75"
+          onClick={() => {
+            setPostData({
+              title: heading,
+              description: content,
+              tags: tags,
+            });
+            setMaximizedPost(false);
+            setReportPost(true);
+          }}
+        >
           <img className="w-5" src={report} alt="" />
           <span className="text-black hidden transition ease-in-out duration-500">
             Report
@@ -102,4 +118,4 @@ function Maximized({ setMaximizedPost, PostData }) {
   );
 }
 
-export default Maximized;
+export default MaximizedPost;

@@ -13,7 +13,6 @@ function NewPost({ setConfirmPost, setMaximizedPost, PostData, setPostData }) {
       fetch("http://localhost:4000/tags")
         .then((res) => res.json())
         .then((data) => {
-          console.log(data);
           setPlainArray(data);
         });
     };
@@ -110,7 +109,6 @@ function NewPost({ setConfirmPost, setMaximizedPost, PostData, setPostData }) {
                   content: content,
                   tags: tags,
                 });
-                console.log(heading, content, tags);
                 // let _tags = tags.map((tag) => tag.id);
                 // postToBlockchain(
                 //   context.contract,

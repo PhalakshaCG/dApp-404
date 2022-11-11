@@ -6,7 +6,14 @@ import "../static/Common.css";
 
 import _ from "lodash";
 
-function Post({ title, description, tags, setPostData, setMaximizedPost }) {
+function Post({
+  title,
+  description,
+  tags,
+  setPostData,
+  setMaximizedPost,
+  setReportPost,
+}) {
   const [count, setCount] = useState(2);
   const [showReportPosts, setShowReportPosts] = useState(false);
 
@@ -67,7 +74,17 @@ function Post({ title, description, tags, setPostData, setMaximizedPost }) {
               ) : (
                 <></>
               )}
-              <div className="cursor-pointer flex gap-8  border-1 rounded-[69px] report py-1 px-3 mr-1 transition ease-in-out duration-75">
+              <div
+                className="cursor-pointer flex gap-8  border-1 rounded-[69px] report py-1 px-3 mr-1 transition ease-in-out duration-75"
+                onClick={() => {
+                  setPostData({
+                    title: title,
+                    description: description,
+                    tags: tags,
+                  });
+                  setReportPost(true);
+                }}
+              >
                 <img className="w-5" src={report} alt="" />
                 <span className="text-black hidden transition ease-in-out duration-500">
                   Report
@@ -79,8 +96,8 @@ function Post({ title, description, tags, setPostData, setMaximizedPost }) {
       </div>
       {showReportPosts ? (
         <div className="mt-7 px-10 w-full">
-          {_.range(1, count + 1).map(() => (
-            <div className="">
+          {_.range(1, count + 1).map((i) => (
+            <div key={i}>
               <div className="content flex flex-col">
                 <div className="">
                   <span

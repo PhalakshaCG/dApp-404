@@ -8,6 +8,8 @@ import getPostByTags from "../helper/getPostsByTags";
 import { AuthContext } from "../context/AuthContext";
 import Signup from "./Signup";
 import MaximizedPost from "../components/MaximizedPost";
+import ReportPost from "../components/ReportPost";
+
 function Home() {
   const { contract, isLoggedIn, getPA } = useContext(AuthContext);
   const tags = [1, 2, 3, 4, 5];
@@ -24,7 +26,6 @@ function Home() {
     checkProfile();
     getPostByTags(contract, tags, 10).then((_posts) => {
       setPosts(_posts);
-      console.log(_posts);
     });
   }, [isLoggedIn]);
 
@@ -32,16 +33,17 @@ function Home() {
   const [confirmPost, setConfirmPost] = useState(false);
   const [maximizedPost, setMaximizedPost] = useState(false);
   const [maximizedNewPost, setMaximizedNewPost] = useState(false);
+  const [reportPost, setReportPost] = useState(false);
   const [NewPostData, setNewPostData] = useState({});
   const [PostData, setPostData] = useState({});
   if (register) {
     return (
       <>
-        <Signup setRegister={setRegister} />
+        <Signup key="0" setRegister={setRegister} />
       </>
     );
   }
-  if (!confirmPost && !maximizedNewPost && !maximizedPost) {
+  if (!confirmPost && !maximizedNewPost && !maximizedPost && !reportPost) {
     return (
       <div className="px-[4vw]" key="1">
         <div className="">
@@ -64,6 +66,7 @@ function Home() {
                   tags={post.tags}
                   setPostData={setPostData}
                   setMaximizedPost={setMaximizedPost}
+                  setReportPost={setReportPost}
                 />
               );
             }
@@ -93,12 +96,18 @@ function Home() {
               setPostData={setNewPostData}
             />
           </div>
-        ) : (
+        ) : maximizedPost ? (
           <div key="4" className="px-[4vw]">
             <MaximizedPost
               setMaximizedPost={setMaximizedPost}
               PostData={PostData}
+              setPostData={setPostData}
+              setReportPost={setReportPost}
             />
+          </div>
+        ) : (
+          <div key="5" className="px-[4vw]">
+            <ReportPost setReportPost={setReportPost} PostData={PostData} />
           </div>
         )}
       </>
