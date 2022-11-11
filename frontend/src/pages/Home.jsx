@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import NewPost from "../components/NewPost";
 import "../static/Common.css";
 import Post from "../components/Post";
@@ -6,9 +6,8 @@ import ConfirmPost from "../components/ConfirmPost";
 import Maximized from "../components/Maximized";
 import getPostByTags from "../helper/getPostsByTags";
 import { AuthContext } from "../context/AuthContext";
-import { useContext } from "react";
-import { useEffect } from "react";
 import Signup from "./Signup";
+import MaximizedPost from "../components/MaximizedPost";
 function Home() {
   const { contract, isLoggedIn, getPA } = useContext(AuthContext);
   const tags = [1, 2, 3, 4, 5];
@@ -23,17 +22,17 @@ function Home() {
         });
     }
     checkProfile();
-    // if (true) {
-    //   setRegister(true);
-    // }
     getPostByTags(contract, tags, 10).then((_posts) => {
       setPosts(_posts);
+      console.log(_posts);
     });
   }, [isLoggedIn]);
 
   const [register, setRegister] = useState(false);
   const [confirmPost, setConfirmPost] = useState(false);
   const [maximizedPost, setMaximizedPost] = useState(false);
+  const [maximizedNewPost, setMaximizedNewPost] = useState(false);
+  const [NewPostData, setNewPostData] = useState({});
   const [PostData, setPostData] = useState({});
   if (register) {
     return (
@@ -42,15 +41,15 @@ function Home() {
       </>
     );
   }
-  if (!confirmPost && !maximizedPost) {
+  if (!confirmPost && !maximizedNewPost && !maximizedPost) {
     return (
       <div className="px-[4vw]" key="1">
         <div className="">
           <NewPost
             setConfirmPost={setConfirmPost}
-            setMaximizedPost={setMaximizedPost}
-            PostData={PostData}
-            setPostData={setPostData}
+            setMaximizedPost={setMaximizedNewPost}
+            PostData={NewPostData}
+            setPostData={setNewPostData}
           />
         </div>
         <hr />
@@ -63,6 +62,8 @@ function Home() {
                   title={post.title}
                   description={post.description}
                   tags={post.tags}
+                  setPostData={setPostData}
+                  setMaximizedPost={setMaximizedPost}
                 />
               );
             }
@@ -78,18 +79,25 @@ function Home() {
           <div key="2" className="px-[4vw]">
             <ConfirmPost
               setConfirmPost={setConfirmPost}
-              setMaximizedPost={setMaximizedPost}
-              PostData={PostData}
-              setPostData={setPostData}
+              setMaximizedPost={setMaximizedNewPost}
+              PostData={NewPostData}
+              setPostData={setNewPostData}
             />
           </div>
-        ) : (
+        ) : maximizedNewPost ? (
           <div key="3" className="px-[4vw]">
             <Maximized
               setConfirmPost={setConfirmPost}
+              setMaximizedPost={setMaximizedNewPost}
+              PostData={NewPostData}
+              setPostData={setNewPostData}
+            />
+          </div>
+        ) : (
+          <div key="4" className="px-[4vw]">
+            <MaximizedPost
               setMaximizedPost={setMaximizedPost}
               PostData={PostData}
-              setPostData={setPostData}
             />
           </div>
         )}

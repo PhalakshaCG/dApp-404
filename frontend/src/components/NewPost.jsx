@@ -1,21 +1,12 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import open from "../assets/open.svg";
 import Multiselect from "multiselect-react-dropdown";
-import { useEffect } from "react";
-import { AuthContext } from "../context/AuthContext";
-import postToBlockchain from "../helper/postToBlockchain";
+
 function NewPost({ setConfirmPost, setMaximizedPost, PostData, setPostData }) {
-  const context = useContext(AuthContext);
   const [heading, setHeading] = useState(PostData?.heading);
   const [content, setContent] = useState(PostData?.content);
   const [tags, setTags] = useState(PostData?.tags);
-  const [plainArray, setPlainArray] = useState([
-    { name: "Option 1", id: 1 },
-    { name: "Option 2", id: 2 },
-    { name: "Option 3", id: 3 },
-    { name: "Option 4", id: 4 },
-    { name: "Option 5", id: 5 },
-  ]);
+  const [plainArray, setPlainArray] = useState([{ name: "Option 1", id: 1 }]);
 
   useEffect(() => {
     const getTags = async () => {
@@ -120,7 +111,7 @@ function NewPost({ setConfirmPost, setMaximizedPost, PostData, setPostData }) {
                   tags: tags,
                 });
                 console.log(heading, content, tags);
-                let _tags = tags.map((tag) => tag.id);
+                // let _tags = tags.map((tag) => tag.id);
                 // postToBlockchain(
                 //   context.contract,
                 //   context.account,
