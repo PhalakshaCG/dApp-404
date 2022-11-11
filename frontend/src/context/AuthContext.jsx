@@ -1,7 +1,8 @@
 import React, { createContext, useState } from "react";
 import { ethers } from "ethers";
 import { abi } from "../utils/constants.js";
-import { contractAddress } from "../utils/constants.js";
+import { contractAddress, rpc_url, private_key } from "../utils/constants.js";
+const Web3 = require('web3');
 
 const { ethereum } = window;
 
@@ -10,8 +11,9 @@ export const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
   const [account, setAccount] = useState("");
   const [contract, setContract] = useState(null);
+  const [backendContract, setBackendContract] = useState(null);
   const [user, setUser] = useState(null);
-
+  const [backend_provider, setBackendProvider] = useState(null);
   async function getProfile(publicAddress) {
     fetch("http://localhost:4000/profile/" + publicAddress)
       .then((res) => res.json())
@@ -24,6 +26,8 @@ export const AuthProvider = ({ children }) => {
     try {
       if (!ethereum) return console.log("Please install metamask");
       const provider = new ethers.providers.Web3Provider(ethereum);
+      let backendProvider = new Web3(rpc_url);
+      backendProvider.eth.accounts.wallet.add(private_key);
       const _account = await ethereum.request({
         method: "eth_requestAccounts",
       });
@@ -33,6 +37,12 @@ export const AuthProvider = ({ children }) => {
       const Contract = new ethers.Contract(contractAddress, abi, signer);
       console.log("Logged in as:", _account);
 
+      const tokenContract = new backendProvider.eth.Contract(
+        abi,
+        contractAddress
+      );
+      setBackendProvider(backendProvider);
+      setBackendContract(tokenContract);
       return Contract;
     } catch (err) {
       console.log(err);
@@ -65,6 +75,8 @@ export const AuthProvider = ({ children }) => {
       value={{
         account,
         contract,
+        backend_provider,
+        backendContract,
         login,
         logout,
         isLoggedIn,

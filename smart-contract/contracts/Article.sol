@@ -1,183 +1,195 @@
-// SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.9;
+    // SPDX-License-Identifier: UNLICENSED
+    pragma solidity ^0.8.9;
 
-contract Article {
-    uint32 constant tagCount = 7;
-    address private owner;
-    uint256[tagCount] public postCount; // tag 0 reserved for reports
-    uint256 public reportCount = 0;
-    uint256 payPerInteraction = 1e6;
-    uint256 penaltyPerInteraction = 1e12;
+    contract Article {
+        uint32 constant tagCount = 7;
+        address private owner;
+        uint256[tagCount] public postCount; // tag 0 reserved for reports
+        uint256 public reportCount = 0;
+        uint256 payPerInteraction = 1e6;
+        uint256 penaltyPerInteraction = 1e12;
 
-    mapping(uint256 => Post)[tagCount] public Posts;
-    mapping(uint256 => Report) public Reports;
+        mapping(uint256 => Post)[tagCount] public Posts;
+        mapping(uint256 => Report) public Reports;
 
-    fallback() external payable {}
-    receive() external payable{}
-    constructor() payable {
-        owner = msg.sender;
-    }
-    event post(
-        address indexed from,
-        string indexed newsLang,
-        uint32 indexed tag,
-        string headline,
-        string content,
-        uint256 timestamp
-    );
-
-    event refuteArticle(
-        uint32 tag,
-        uint256 id,
-        uint penalty
-    );
-
-    struct Report {
-        uint id;
-        bool isArchived;
-        uint8 reportPostTag;
-        uint reportPostID;
-        address[] confirmations;
-        address[] refutations;
-    }
-    struct Post {
-        uint id;
-        bool isReportPost;
-        bool truth;
-        address payable from;
-        string newsLang; 
-        uint32 tag; 
-        string  headline; 
-        string content;
-        uint256 timestamp;
-        uint256 rating;
-        uint32 interactions;
-        uint256[] reports;
-    }
-
-    // *
-    // * Functions for posting
-    // *
-    function postArticle(address payable from, string memory newsLang, uint32 tag, string memory headline, string memory content, uint256 rating) public {
-        require(tag<tagCount && tag>=0, "Ivalid tag");
-
-        Posts[tag][postCount[tag]] = Post(
-            postCount[tag],
-            false,
-            true,
-            from, 
-            newsLang, 
-            tag, 
-            headline, 
-            content, 
-            block.timestamp, 
-            rating, 
-            0, 
-            new uint256[](0)
-        );
-        postCount[tag]++;
-        
-        emit post(from, newsLang, tag, headline, content, block.timestamp);
-    }
-
-    function withdraw(uint256 id, uint32 tag) payable public {
-        Post memory current = Posts[tag][id];
-        require(current.from == msg.sender, "You are not the owner of this post");
-        require(Posts[tag][id].truth, "This post has been flagged false");
-        Posts[tag][id].from.transfer(current.interactions*payPerInteraction);
-    }
-
-    function getPostByTags(uint32[] memory tags) payable public returns (Post memory result) {
-        for(uint32 i=0; i<tags.length; i++)
-            require(tags[i] < tagCount && tags[i] >=0, "Invalid tag");
-
-        uint32 randTag;
-        uint256 randIndex;
-        do{
-            uint32 random = uint32(uint(keccak256(abi.encodePacked(block.timestamp,block.difficulty, msg.sender))) % tags.length);
-            randTag = tags[random];
-            randIndex = uint(keccak256(abi.encodePacked(block.timestamp,block.difficulty, msg.sender))) % postCount[randTag];
-        } while(postCount[randTag]==0 && Posts[randTag][randIndex].truth);
-       
-        Posts[randTag][randIndex].interactions++;
-        return Posts[randTag][randIndex];
-    }
-
-    // Function to fetch posts for user
-    function getPostByID(uint256 id, uint32 tag) view public returns (Post memory result) {
-        require(id>=0&&id<postCount[tag], "Invalid indices");
-        return Posts[tag][id];
-    }
-
-    // Report
-    function reportArticle(uint8 reportPostTag, uint256 reportPostID,address payable from, string memory newsLang, string memory headline, string memory content, uint256 rating) public {
-        require(rating>85e6,"Rating must be greater than 85%");
-
-        Posts[0][reportCount] = Post(
-            reportCount,
-            true,
-            true,
-            from, 
-            newsLang, 
-            0, 
-            headline, 
-            content, 
-            block.timestamp, 
-            rating, 
-            0, 
-            new uint256[](0)
+        fallback() external payable {}
+        receive() external payable{}
+        constructor() payable {
+            owner = msg.sender;
+        }
+        event post(
+            address indexed from,
+            string indexed newsLang,
+            uint32 indexed tag,
+            string headline,
+            string content,
+            uint256 timestamp
         );
 
-        Reports[reportCount] = Report(
-            reportCount,
-            false,
-            reportPostTag,
-            reportPostID,
-            new address[](0),
-            new address[](0)
+        event viewPost(
+            uint256 indexed id,
+            Post post
         );
-        Posts[reportPostTag][reportPostID].reports.push(reportCount);
-        reportCount++;
 
-        emit post(from, newsLang, 0, headline, content, block.timestamp);
-    }
+        event refuteArticle(
+            uint32 tag,
+            uint256 id,
+            uint penalty
+        );
 
-    function confirmReport(uint256 id) public {
-        require(msg.sender!=Posts[0][id].from);
-        require(!includes(msg.sender, Reports[id].confirmations));
-        Reports[id].confirmations.push(msg.sender);
-        if(Reports[id].confirmations.length==10){
-            uint penalty = penaltyPerInteraction*Posts[Reports[id].reportPostTag][Reports[id].reportPostID].interactions;
-            emit refuteArticle(
-                Reports[id].reportPostTag,
-                Reports[id].reportPostID,
-                penalty
+        struct Report {
+            uint id;
+            bool isArchived;
+            uint8 reportPostTag;
+            uint reportPostID;
+            address[] confirmations;
+            address[] refutations;
+        }
+        struct Post {
+            uint id;
+            bool isReportPost;
+            bool truth;
+            address payable from;
+            string newsLang; 
+            uint32 tag; 
+            string  headline; 
+            string content;
+            uint256 timestamp;
+            uint256 rating;
+            uint32 interactions;
+            uint256[] reports;
+        }
+
+        // *
+        // * Functions for posting
+        // *
+        function postArticle(address payable from, string memory newsLang, uint32 tag, string memory headline, string memory content, uint256 rating) public {
+            require(tag<tagCount && tag>=0, "Ivalid tag");
+
+            Posts[tag][postCount[tag]] = Post(
+                postCount[tag],
+                false,
+                true,
+                from, 
+                newsLang, 
+                tag, 
+                headline, 
+                content, 
+                block.timestamp, 
+                rating, 
+                0, 
+                new uint256[](10)
             );
-            Posts[Reports[id].reportPostTag][Reports[id].reportPostID].truth = false;
+            postCount[tag]++;
+            
+            emit post(from, newsLang, tag, headline, content, block.timestamp);
         }
-    }
 
-    function refuteReport(uint256 id) public {
-        require(!includes(msg.sender, Reports[id].refutations));
-        Reports[id].refutations.push(msg.sender);
-        if(Reports[id].refutations.length==10){
-            uint penalty = penaltyPerInteraction*Posts[0][id].interactions;
-            emit refuteArticle(
-                0,
-                id,
-                penalty
+        function withdraw(uint256 id, uint32 tag) payable public {
+            Post memory current = Posts[tag][id];
+            require(current.from == msg.sender, "You are not the owner of this post");
+            require(Posts[tag][id].truth, "This post has been flagged false");
+            Posts[tag][id].from.transfer(current.interactions*payPerInteraction);
+        }
+
+        function getPostByTags(uint32[] memory tags) payable public {
+            uint8 i;
+            for(i=0; i<tags.length; i++)
+                require(tags[i] < tagCount && tags[i] >=0, "Invalid tag");
+
+            uint32 randTag;
+            uint256 randIndex;
+            i = 0;
+            do{
+                uint32 random = uint32(uint(keccak256(abi.encodePacked(block.timestamp,block.difficulty, msg.sender))) % tags.length);
+                randTag = tags[random];
+                randIndex = uint(keccak256(abi.encodePacked(block.timestamp,block.difficulty, msg.sender))) % postCount[randTag];
+                i++;
+            } while(postCount[randTag]==0 && Posts[randTag][randIndex].truth && i<11);
+            require(i<11,"Unable to find posts");
+            Posts[randTag][randIndex].interactions++;
+            emit viewPost(block.number ,Posts[randTag][randIndex]);
+        }
+
+        // Function to fetch posts for user
+        function getPostByID(uint256 id, uint32 tag) view public returns (Post memory result) {
+            require(id>=0&&id<postCount[tag], "Invalid indices");
+            return Posts[tag][id];
+        }
+
+        // Report
+        function reportArticle(uint8 reportPostTag, uint256 reportPostID,address payable from, string memory newsLang, string memory headline, string memory content, uint256 rating) public {
+            require(rating>85e6,"Rating must be greater than 85%");
+
+            Posts[0][reportCount] = Post(
+                reportCount,
+                true,
+                true,
+                from, 
+                newsLang, 
+                0, 
+                headline, 
+                content, 
+                block.timestamp, 
+                rating, 
+                0, 
+                new uint256[](10)
             );
-            Posts[0][id].truth = false;
-            Reports[id].isArchived = true;
-        }
-    }
 
-    // Utility functions
-    function includes(address value,address[] memory array) private pure returns(bool) {
-        for(uint32 i = 0; i<array.length; i++){
-            if(value == array[i])
-                return true;
+            Reports[reportCount] = Report(
+                reportCount,
+                false,
+                reportPostTag,
+                reportPostID,
+                new address[](0),
+                new address[](0)
+            );
+            Posts[reportPostTag][reportPostID].reports.push(reportCount);
+            reportCount++;
+
+            emit post(from, newsLang, 0, headline, content, block.timestamp);
         }
-        return false;
+
+        function confirmReport(uint256 id) public {
+            require(msg.sender!=Posts[0][id].from);
+            require(!includes(msg.sender, Reports[id].confirmations), "You have already confirmed");
+            require(!Reports[id].isArchived, "Report is refuted and archived");
+            Reports[id].confirmations.push(msg.sender);
+            if(Reports[id].confirmations.length==10){
+                uint penalty = penaltyPerInteraction*Posts[Reports[id].reportPostTag][Reports[id].reportPostID].interactions;
+                emit refuteArticle(
+                    Reports[id].reportPostTag,
+                    Reports[id].reportPostID,
+                    penalty
+                );
+                Posts[Reports[id].reportPostTag][Reports[id].reportPostID].truth = false;
+            }
+        }
+
+        function refuteReport(uint256 id) public {
+            require(!includes(msg.sender, Reports[id].refutations));
+            Reports[id].refutations.push(msg.sender);
+            if(Reports[id].refutations.length==10){
+                uint penalty = penaltyPerInteraction*Posts[0][id].interactions;
+                emit refuteArticle(
+                    0,
+                    id,
+                    penalty
+                );
+                Posts[0][id].truth = false;
+                Reports[id].isArchived = true;
+            }
+        }
+
+        function viewConfirmations(uint256 id) public view returns(address[] memory){
+            return Reports[id].confirmations;
+        }
+        // Utility functions
+        function includes(address value,address[] memory array) private pure returns(bool) {
+            for(uint32 i = 0; i<array.length; i++){
+                if(value == array[i])
+                    return true;
+            }
+            return false;
+        }
     }
-}

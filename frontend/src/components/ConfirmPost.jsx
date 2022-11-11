@@ -12,7 +12,7 @@ function ConfirmPost({
   const context = useContext(AuthContext);
   const [heading, setHeading] = useState("");
   const [content, setContent] = useState("");
-  const [tags, setTags] = useState([]);
+  const [tag, setTag] = useState(null);
   const [plainArray, setPlainArray] = useState([
     { name: "Option 1", id: 1 },
     { name: "Option 2", id: 2 },
@@ -48,34 +48,35 @@ function ConfirmPost({
     if (PostData.heading) {
       setHeading(PostData.heading);
       setContent(PostData.content);
-      setTags(PostData.tags);
+      setTag(PostData.tags);
     }
   }, [PostData]);
 
   const submit = () => {
-    let _tags = tags.map((tag) => tag.name);
+    let rating = 85000000;
     post(
       context.contract,
       context.account,
       "NewsLang",
-      _tags,
+      tag[0].id,
       heading,
-      content
+      content,
+      rating
     );
     setHeading("");
     setContent("");
-    setTags([]);
+    setTag(null);
     setPostData(null);
     setConfirmPost(false);
     setMaximizedPost(false);
   };
 
   const onSelect = (selectedList, selectedItem) => {
-    setTags(selectedList);
+    setTag(selectedList);
   };
 
   const onRemove = (selectedList, removedItem) => {
-    setTags(selectedList);
+    setTag(selectedList);
   };
 
   return (
@@ -90,7 +91,7 @@ function ConfirmPost({
               setPostData({
                 heading: heading,
                 content: content,
-                tags: tags,
+                tags: tag,
               });
             }}
           >
@@ -147,9 +148,9 @@ function ConfirmPost({
                 placeholder="Add Tags"
                 style={dropdown_style}
                 avoidHighlightFirstOption={true}
-                closeOnSelect={false}
+                closeOnSelect={true}
                 hidePlaceholder={true}
-                selectedValues={tags}
+                selectedValues={tag}
                 onSelect={onSelect}
                 onRemove={onRemove}
                 displayValue="name"

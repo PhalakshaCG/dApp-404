@@ -10,7 +10,7 @@ import { useContext } from "react";
 import { useEffect } from "react";
 import Signup from "./Signup";
 function Home() {
-  const { contract, isLoggedIn, getPA } = useContext(AuthContext);
+  const { contract, isLoggedIn, getPA, backendContract, backend_provider } = useContext(AuthContext);
   const tags = [1, 2, 3, 4, 5];
   const [posts, setPosts] = useState([]);
 
@@ -26,7 +26,7 @@ function Home() {
     // if (true) {
     //   setRegister(true);
     // }
-    getPostByTags(contract, tags, 10).then((_posts) => {
+    getPostByTags(backend_provider, backendContract, tags, 5).then((_posts) => {
       setPosts(_posts);
     });
   }, [isLoggedIn]);
