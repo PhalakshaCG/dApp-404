@@ -16,7 +16,7 @@ import {
   getUserPosts,
   deleteUserPosts,
 } from "../controller/postController.js";
-
+// import { addAvatar } from "../controller/avatarController.js";
 const allRoutes = (app) => {
   app
     .route("/profile")
@@ -66,6 +66,10 @@ const allRoutes = (app) => {
     .route("/post/deleteuserposts/:userid")
 
     .delete(deleteUserPosts);
+  // app
+  //   .route("/avatar/addavatar")
+
+  //   .post(addAvatar);
 };
 
 export default allRoutes;

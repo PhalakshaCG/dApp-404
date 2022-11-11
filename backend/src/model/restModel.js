@@ -26,6 +26,7 @@ export const ProfileSchema = new schema({
   tags: {
     type: Array,
   },
+
   creation_date: {
     type: Date,
 
