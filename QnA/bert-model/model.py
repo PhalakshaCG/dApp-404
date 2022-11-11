@@ -2,12 +2,28 @@ from . import auth
 from flask_httpauth import HTTPBasicAuth
 from transformers import AutoModelForQuestionAnswering, AutoTokenizer, pipeline
 import redis
+from sentence_transformers import SentenceTransformer
+from sklearn.metrics.pairwise import cosine_similarity
 
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
 
 app = Blueprint('qna',__name__)
+
+
+def check_similiarity(str1,str2):
+    model = SentenceTransformer('bert-base-nli-mean-tokens')
+    sentences = [str1,str2]
+    sentence_embeddings = model.encode(sentences)
+    # print(sentence_embeddings)
+    # print(sentence_embeddings.shape)
+
+    val = cosine_similarity([sentence_embeddings[0]],sentence_embeddings[1:])
+    
+    return str(val[0][0])
+    
+
 
 @app.route('/run', methods=['GET','POST'])
 #@auth.auth.login_required()
@@ -50,6 +66,8 @@ def bert_run():
             res = nlp(QA_input)
             
             # Do Similiarity Checking
+            res_query = request_data['query']
+            print(check_similiarity(str(res['answer']),res_query))
 
 
             r.set(name=question,value=res['answer'])

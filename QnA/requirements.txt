@@ -4,3 +4,5 @@ tflite-support
 transformers
 tensorflow
 redis
+scikit-learn
+sentence-transformers
