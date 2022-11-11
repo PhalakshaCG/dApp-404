@@ -26,6 +26,5 @@ def create_app(test_config=None):
 
     app.register_blueprint(auth.bp)
     app.register_blueprint(model.app)
-    #app.add_url_rule('/',endpoint='auth_me')
 
     return app

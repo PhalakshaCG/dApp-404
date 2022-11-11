@@ -78,6 +78,13 @@
   }
 }
 
-/* .register {
-  box-shadow: inset 0 4px 4px 2px #43495572;
-} */
+.profileImage {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: #512da8;
+  font-size: 35px;
+  color: #fff;
+  text-align: center;
+  line-height: 150px;
+}

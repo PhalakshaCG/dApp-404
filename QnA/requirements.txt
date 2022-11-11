@@ -3,3 +3,4 @@ Flask-HTTPAuth
 tflite-support
 transformers
 tensorflow
+redis

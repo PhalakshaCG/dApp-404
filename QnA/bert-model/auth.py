@@ -7,11 +7,10 @@ from flask import (
 )
 
 bp = Blueprint('auth',__name__)
-auth = HTTPTokenAuth()
+auth = HTTPTokenAuth(scheme='Bearer')
 
 tokens = {
-    "secret-token-1": "john",
-    "secret-token-2": "susan"
+    "bert-model": "Shrujan"
 }
 
 @auth.verify_token

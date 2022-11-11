@@ -85,6 +85,8 @@ export const deleteProfileByID = (req, res) => {
     }
   );
 };
+
+//tags
 export const getusertags = (req, res) => {
   Profile.findOne({ public_id: req.params.profileID }, (err, profile) => {
     if (err) {

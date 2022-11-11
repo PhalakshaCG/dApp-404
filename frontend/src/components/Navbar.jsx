@@ -60,11 +60,19 @@ function Navbar() {
           Login
         </div>
       ) : (
-        <div
-          className={normalStyle + activeStyle + " text-2xl cursor-pointer"}
-          onClick={logout}
-        >
-          {user}
+        <div className="flex gap-5">
+          <NavLink
+            className={normalStyle + activeStyle + " text-2xl cursor-pointer"}
+            to="/profile"
+          >
+            {user}
+          </NavLink>
+          <div
+            className={normalStyle + activeStyle + " text-2xl cursor-pointer"}
+            onClick={logout}
+          >
+            Logout
+          </div>
         </div>
       )}
     </div>
