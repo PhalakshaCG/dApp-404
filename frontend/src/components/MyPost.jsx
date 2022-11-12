@@ -24,19 +24,6 @@ function Post({ title, description, tags, setPostData, setMaximizedPost }) {
         </div>
         <div className="options">
           <div className="cursor-pointer flex flex-row gap-[10rem] justify-center items-center">
-            {/* <div
-              className="pl-3"
-              onClick={() => {
-                setPostData({
-                  title: title,
-                  description: description,
-                  tags: tags,
-                });
-                setMaximizedPost(true);
-              }}
-            >
-              <img className="w-5" src={open} alt="" />
-            </div> */}
             <div className="tags flex gap-4">
               {tags.map((tag) => (
                 <div

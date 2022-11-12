@@ -1,8 +1,13 @@
 import React, { createContext, useState } from "react";
-import { ethers } from "ethers";
 import { abi } from "../utils/constants.js";
-import { contractAddress, rpc_url, private_key, adContractAddress, adAbi } from "../utils/constants.js";
-const Web3 = require('web3');
+import {
+  contractAddress,
+  rpc_url,
+  private_key,
+  adContractAddress,
+  adAbi,
+} from "../utils/constants.js";
+const Web3 = require("web3");
 
 const { ethereum } = window;
 
@@ -26,7 +31,7 @@ export const AuthProvider = ({ children }) => {
   const createEthereumContract = async () => {
     try {
       if (!ethereum) return console.log("Please install metamask");
-      
+
       let backendProvider = new Web3(rpc_url);
       backendProvider.eth.accounts.wallet.add(private_key);
       const _account = await ethereum.request({
