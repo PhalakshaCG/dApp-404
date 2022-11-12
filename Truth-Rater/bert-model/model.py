@@ -55,12 +55,6 @@ def bert_run():
         question = question_generator(query)
         print(question)
 
-        # Get context/content
-        context = requests.get('http://localhost:4000/getarticles/' + question)
-        context = context.json()
-        print(context)
-        context = context[0]        #For now
-
         # context = request_data['context']
         # question = request_data['question']
         print(request_data)
@@ -76,6 +70,12 @@ def bert_run():
                 return { "Verdict" : "True", "Answer" : res.decode("utf-8")}
             return { "Verdict" : "False", "Answer" : res.decode("utf-8")}
         else:
+            # Get context/content
+            context = requests.get('http://localhost:4000/getarticles/' + question)
+            context = context.json()
+            print(context)
+            context = context[0]        #For now
+
             # Initialization of model
             model_name = "deepset/roberta-base-squad2"
             nlp = pipeline('question-answering', model=model_name, tokenizer=model_name)
