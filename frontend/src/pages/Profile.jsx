@@ -18,6 +18,9 @@ function Profile() {
         console.log(data);
         data.json().then((tags) => {
           console.log(tags);
+          tags = tags.map((tag)=>{
+            return [tag.postid, tag.tagid]
+          })
           getPostByID(backendContract, tags).then((_posts) => {
             setPosts(_posts);
             console.log(_posts);
@@ -39,7 +42,6 @@ function Profile() {
     setName(Name);
 
     if (user) {
-      console.log("http://localhost:4000/post/getuserposts/" + user?.public_id);
       fetch("http://localhost:4000/post/getuserposts/" + user?.public_id).then(
         (data) => {
           console.log(data);
@@ -77,11 +79,11 @@ function Profile() {
               <div>{user?.email}</div>
             </div>
             <div className="flex flex-row justify-between">
-              <div>Brownies: </div>
+              <div>Brownies: 23</div>
               <div>{user?.brownies}</div>
             </div>
             <div className="flex flex-row justify-between">
-              <div>Penalties: </div>
+              <div>Penalties: 4</div>
               <div>{user?.penalties}</div>
             </div>
           </div>
@@ -105,10 +107,13 @@ function Profile() {
           if (post.title) {
             return (
               <MyPost
+                truth={post.truth}
                 key={post.id}
                 title={post.title}
                 description={post.description}
                 tags={post.tags}
+                interactions={post.interactions}
+                id={post.id}
               />
             );
           }

@@ -1,11 +1,14 @@
 import React from "react";
 import remove from "../assets/remove-file.svg";
 import "../static/Common.css";
-
-function Post({ title, description, tags, setPostData, setMaximizedPost }) {
+import withdraw from "../helper/withdraw";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
+function Post({ truth, id, title, description, tags, interactions, setPostData, setMaximizedPost }) {
+  const {contract, backend_provider, account} = useContext(AuthContext);
   return (
-    <div className=" px-[14rem] mb-10">
-      <div>
+    <div  className=" px-[14rem] mb-10">
+      <div  style={truth?{}:{backgroundImage : "linear-gradient(25deg,#d64c7f,#ee4758 50%)" , borderRadius:"15px"}}>
         <div className="content flex flex-col">
           <div className="">
             <span
@@ -13,7 +16,7 @@ function Post({ title, description, tags, setPostData, setMaximizedPost }) {
               type="text"
               placeholder="  Heading"
             >
-              {title}
+              {title} {truth?"":" (Fake)"}
             </span>
           </div>
           <div className="newpost my-5">
@@ -24,6 +27,7 @@ function Post({ title, description, tags, setPostData, setMaximizedPost }) {
         </div>
         <div className="options">
           <div className="cursor-pointer flex flex-row gap-[10rem] justify-center items-center">
+        <div className="">Post Viewed By : {interactions}</div>
             <div className="tags flex gap-4">
               {tags.map((tag) => (
                 <div
@@ -35,7 +39,15 @@ function Post({ title, description, tags, setPostData, setMaximizedPost }) {
               ))}
             </div>
             <div className="pl-3 cursor-pointer">
-              <img className="w-6" src={remove} alt="" onClick={() => {}} />
+              <img className="w-6" src={remove} alt="" onClick={() => {
+                withdraw(
+                  contract,
+                  backend_provider,
+                  id,
+                  tags[0].id,
+                  account
+                )
+              }} />
             </div>
           </div>
         </div>

@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../context/AuthContext";
 import post from "../helper/postToBlockchain";
 import Multiselect from "multiselect-react-dropdown";
+import NewsLang from "./NewsLang";
 
 function ConfirmPost({
   setConfirmPost,
@@ -53,7 +54,7 @@ function ConfirmPost({
   }, [PostData]);
 
   const submit = () => {
-    let rating = 85000000;
+    let rating = 85000000+parseInt(Math.random()*10000000);
     post(
       context.contract,
       context.backend_provider,
@@ -125,7 +126,7 @@ function ConfirmPost({
             />
           </div>
           <h2 className="text-4xl mb-5">Heading In News Langauge</h2>
-          <div className="news-lang w-full h-[200px] bg-white "></div>
+          <NewsLang/>
           <h2 className="text-2xl mt-10">Content</h2>
           <div className="newpost my-5">
             <textarea

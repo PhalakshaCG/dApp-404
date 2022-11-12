@@ -19,6 +19,7 @@ function Home() {
     backendContract,
     backend_provider,
     backendAdContract,
+    account
   } = useContext(AuthContext);
   const tags = [1, 2, 3, 4, 5];
   const [posts, setPosts] = useState([]);
@@ -36,7 +37,7 @@ function Home() {
     // if (true) {
     //   setRegister(true);
     // }
-    getPostByTags(backendContract, backendAdContract, tags, 5).then(
+    getPostByTags(backendContract, backendAdContract, backend_provider, tags, 5, account).then(
       (_posts) => {
         setPosts(_posts);
       }
@@ -85,13 +86,15 @@ function Home() {
                     title={post.title}
                     description={post.description}
                     tags={post.tags}
-                    interactions={5} // Pass in the number of interactions
-                    truthRating={10506600} // Pass in truth value
+                    interactions={post.interactions} // Pass in the number of interactions
+                    truthRating={post.rating} // Pass in truth value
                     setPostData={setPostData}
                     setMaximizedPost={setMaximizedPost}
                     setReportPost={setReportPost}
                     reportIDs={post.reportIDs}
                     count={2} // Pass in the number of reports
+                    id={post.id}
+                    truth={post.truth}
                   />{" "}
                   <div
                     style={{

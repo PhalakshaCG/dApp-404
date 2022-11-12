@@ -38,14 +38,6 @@ function Navbar() {
             className={({ isActive }) => {
               return isActive ? normalStyle + activeStyle : normalStyle;
             }}
-            to="/search"
-          >
-            Search
-          </NavLink>
-          <NavLink
-            className={({ isActive }) => {
-              return isActive ? normalStyle + activeStyle : normalStyle;
-            }}
             to="/profile"
           >
             Profile

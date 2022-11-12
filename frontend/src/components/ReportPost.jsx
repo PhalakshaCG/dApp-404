@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from "react";
 import open from "../assets/open.svg";
 // import Multiselect from "multiselect-react-dropdown";
-
+import postReportArticle from "../helper/postReportArticle";
+import { AuthContext } from "../context/AuthContext";
+import { useContext } from "react";
 function ReportPost({ setReportPost, PostData }) {
   const [title, setTitle] = useState("");
   const [description, setDesc] = useState("");
   const [tags, setTags] = useState([]);
   const [heading, setHeading] = useState("");
   const [content, setContent] = useState("");
+  const context = useContext(AuthContext);
+  const [originalID, setOriginalID] = useState("");
   //   const [newtags, setNewTags] = useState("");
   //   const [plainArray, setPlainArray] = useState([{ name: "Option 1", id: 1 }]);
 
@@ -48,6 +52,7 @@ function ReportPost({ setReportPost, PostData }) {
       setTitle(PostData.title);
       setDesc(PostData.description);
       setTags(PostData.tags);
+      setOriginalID(PostData.id);
     }
   }, [PostData]);
 
@@ -140,7 +145,21 @@ function ReportPost({ setReportPost, PostData }) {
             <div className="submit">
               <button
                 className="bg-[#D1F5FF] rounded-[69px] px-5 py-2 text-[#E63A0B] font-bold cursor-pointer"
-                onClick={() => {}}
+                onClick={() => {
+                  let rating = 85000000+parseInt(Math.random()*10000000);
+                  postReportArticle(
+                    context.contract,
+                    context.backend_provider,
+                    tags[0].id,
+                    originalID,
+                    context.account,
+                    "NewsLang",
+                    heading,
+                    content,
+                    rating
+                  );
+                  setReportPost(false);
+                }}
               >
                 Post
               </button>

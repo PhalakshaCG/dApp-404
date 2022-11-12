@@ -3,12 +3,17 @@ import { useState, useEffect } from "react";
 import open from "../assets/open.svg";
 import report from "../assets/report.svg";
 import "../static/Common.css";
-import _ from "lodash";
 import { AuthContext } from "../context/AuthContext";
+import _ from "lodash";
 import { useContext } from "react";
 import getPostByID from "../helper/getPostsByID";
+import confirmReport from "../helper/confirmReport";
+import refuteReport from "../helper/refuteReport";
+import gradient from "../assets/gradient.svg"
+
 function Post({
   id,
+  reportIDs,
   title,
   description,
   tags,
@@ -16,21 +21,13 @@ function Post({
   truthRating,
   setMaximizedPost,
   setReportPost,
-  reportIDs,
   interactions,
   count,
+  truth,
 }) {
-  const [count, setCount] = useState(reportIDs.length);
   const [showReportPosts, setShowReportPosts] = useState(false);
-  const [posts, setPosts] = useState([]);
-  const {Contract} = useContext(AuthContext);
-  reportIDs = reportIDs.map((id)=>{
-    return [0, id]
-  });
-  getPostByID(Contract, reportIDs)
-  .then((_posts)=>{
-    setPosts(_posts);
-  });
+  const [reportPosts, setReportPosts] = useState([]);
+  const {contract, backend_provider, account} = useContext(AuthContext);
   function componentToHex(c) {
     var hex = c.toString(16);
     return hex.length === 1 ? "0" + hex : hex;
@@ -50,27 +47,14 @@ function Post({
 
   useEffect(() => {
     if (count > 0) {
-      //write function to get all post that have reported current post in the format
-      // [
-      // {
-      //         "id": "",
-      //         "title": "",
-      //         "description": "",
-      //       }
-      //       {
-      //         "id": "",
-      //         "title": "",
-      //         "description": "",
-      //       }]
-      let arr = [];
-      for (let i = 0; i < count; i++) {
-        arr.push({
-          id: i,
-          title: title + i,
-          description: description + i,
-        });
-      }
-      setReportPosts(arr);
+      reportIDs = reportIDs.map((id)=>{
+        return [0,parseInt(id)];
+      })
+      console.log(reportIDs)
+      if(reportIDs.length>0)
+      getPostByID(contract, reportIDs).then((posts=>{
+        setReportPosts(posts)
+      }))
     }
   }, []);
 
@@ -78,7 +62,7 @@ function Post({
 
   return (
     <div className="pt-10 pl-[6rem] pr-[4rem] mb-3">
-      <div>
+      <div style={truth?{}:{backgroundImage : "linear-gradient(25deg,#d64c7f,#ee4758 50%)" , borderRadius:"15px"}}>
         <div className="content flex flex-col">
           <div className="">
             <span
@@ -87,7 +71,7 @@ function Post({
               placeholder="  Heading"
               style={{ textShadow: "2px 2px rgb(100, 149, 237)" }}
             >
-              {title}
+              {title} {truth?"":"(Fake)"}
             </span>
           </div>
           <div className="newpost my-5">
@@ -105,6 +89,7 @@ function Post({
                   title: title,
                   description: description,
                   tags: tags,
+                  id: id,
                 });
                 setMaximizedPost(true);
               }}
@@ -130,7 +115,7 @@ function Post({
                     setShowReportPosts(!showReportPosts);
                   }}
                 >
-                  Reported By: {count}
+                  Reports: {reportIDs.length}
                 </div>
               ) : (
                 <></>
@@ -151,6 +136,7 @@ function Post({
                     title: title,
                     description: description,
                     tags: tags,
+                    id
                   });
                   setReportPost(true);
                 }}
@@ -164,10 +150,9 @@ function Post({
           </div>
         </div>
       </div>
-      <div className="mt-7 px-10 w-full">
       {showReportPosts ? (
-        <div className="posts mt-5 ">
-        {posts.map((post) => (
+        <div className="mt-7 px-10 w-full">
+          {reportPosts.map((post) => (
             <div key={post.id}>
               <div className="content flex flex-col">
                 <div className="">
@@ -186,27 +171,29 @@ function Post({
                 </div>
                 <div className="flex gap-[6rem] justify-center mb-7">
                   <div className="flex gap-7">
-                    <div className="">Confirmed By: {count}</div>
-                    <div className="bg-green-600 rounded-[69px] px-5 py-1 ">
+                    <div className="">Confirmed By: {post.confirmations}</div>
+                    <button className="bg-green-600 rounded-[69px] px-5 py-1 " onClick={()=>{
+                        confirmReport(contract, backend_provider, post.id, account)
+                    }}>
                       Confirm
-                    </div>
+                    </button>
                   </div>
                   <div className="flex gap-7">
-                    <div className="rounded-[69px] px-5 py-1 bg-[#E63A0B]">
+                    <button className="rounded-[69px] px-5 py-1 bg-[#E63A0B]" onClick={()=>{
+                      refuteReport(contract, backend_provider, post.id, account)
+                    }}>
                       Refute
-                    </div>
-                    <div className="">Reported By: {count}</div>
+                    </button>
+                    <div className="">Refuted By: {post.refutations}</div>
                   </div>
                 </div>
               </div>
             </div>
-            ))
-        }
-      </div>
+          ))}
+        </div>
       ) : (
         <></>
       )}
-    </div>
     </div>
   );
 }

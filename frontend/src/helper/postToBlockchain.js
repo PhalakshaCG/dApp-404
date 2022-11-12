@@ -4,9 +4,11 @@ const postToBlockchain = async (Contract, Provider, address,  newsLang, tags, he
       console.log(nonce);
       let post = await Contract.methods.postArticle(address,  newsLang, tags, headline, content, rating).send({
             from:address,
-            gas:300000,
+            gas:1000000,
             nonce
       })
+      console.log(post.events.post.returnValues)
+      alert("Article posted successfully")
       fetch("http://localhost:4000/post/addpost",{
             method: "post",
             body: JSON.stringify({

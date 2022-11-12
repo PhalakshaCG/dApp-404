@@ -1,7 +1,7 @@
 import article from './Article.json'
 import advertise from './Advertise.json'
 
-export const contractAddress = "0x691BAF5ea48C2f745B4600d25F25163e7e40C32b"
+export const contractAddress = "0xEB1966cd16A2Deb1270A8600FD7dF6C5eD31c301"
 export const adContractAddress = "0x19176bd09e161Be8d229485188f1c96a94CDFF6B"
 export const abi =  article.abi;
 export const adAbi = advertise.abi;

@@ -6,7 +6,7 @@
         address private owner;
         uint256[tagCount] public postCount; // tag 0 reserved for reports
         uint256 public reportCount = 0;
-        uint256 payPerInteraction = 1e6;
+        uint256 payPerInteraction = 1e12;
         uint256 penaltyPerInteraction = 1e12;
 
         mapping(uint256 => Post)[tagCount] public Posts;
@@ -79,7 +79,7 @@
                 block.timestamp, 
                 rating, 
                 0, 
-                new uint256[](10)
+                new uint256[](0)
             );
             postCount[tag]++;
             
@@ -126,7 +126,7 @@
                 block.timestamp, 
                 rating, 
                 0, 
-                new uint256[](10)
+                new uint256[](0)
             );
 
             Reports[reportCount] = Report(
@@ -139,6 +139,7 @@
             );
             Posts[reportPostTag][reportPostID].reports.push(reportCount);
             reportCount++;
+            postCount[0]++;
 
             emit post(reportCount - 1, from, newsLang, 0, headline, content, block.timestamp);
         }
@@ -176,6 +177,10 @@
 
         function viewConfirmations(uint256 id) public view returns(address[] memory){
             return Reports[id].confirmations;
+        }
+
+        function reportStats(uint256 id) public view returns(uint256 confirmations, uint256 refutations){
+            return (Reports[id].confirmations.length, Reports[id].refutations.length);
         }
         // Utility functions
         function includes(address value,address[] memory array) private pure returns(bool) {
