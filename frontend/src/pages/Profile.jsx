@@ -41,19 +41,19 @@ function Profile() {
           </div>
           <div className="box-border pt-10 w-[35%] text-xl flex flex-col gap-10 text-black">
             <div className="flex flex-row justify-between">
-              <div>Public ID</div>
+              <div>Public ID: </div>
               <div>{user?.public_id?.substr(0, 15) + "..."}</div>
             </div>
             <div className="flex flex-row justify-between">
-              <div>Email</div>
+              <div>Email: </div>
               <div>{user?.email}</div>
             </div>
             <div className="flex flex-row justify-between">
-              <div>Brownies</div>
+              <div>Brownies: </div>
               <div>{user?.brownies}</div>
             </div>
             <div className="flex flex-row justify-between">
-              <div>Penalties</div>
+              <div>Penalties: </div>
               <div>{user?.penalties}</div>
             </div>
           </div>

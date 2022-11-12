@@ -92,23 +92,13 @@
             Posts[tag][id].from.transfer(current.interactions*payPerInteraction);
         }
 
-        function getPostByTags(uint32[] memory tags) payable public {
-            uint8 i;
-            for(i=0; i<tags.length; i++)
-                require(tags[i] < tagCount && tags[i] >=0, "Invalid tag");
-
-            uint32 randTag;
+        function getPostByTag(uint32 tag) public returns (Post memory) {
+            require(tag < tagCount && tag >=0, "Invalid tag");
+            require(postCount[tag]>0);
             uint256 randIndex;
-            i = 0;
-            do{
-                uint32 random = uint32(uint(keccak256(abi.encodePacked(block.timestamp,block.difficulty, msg.sender))) % tags.length);
-                randTag = tags[random];
-                randIndex = uint(keccak256(abi.encodePacked(block.timestamp,block.difficulty, msg.sender))) % postCount[randTag];
-                i++;
-            } while(postCount[randTag]==0 && Posts[randTag][randIndex].truth && i<11);
-            require(i<11,"Unable to find posts");
-            Posts[randTag][randIndex].interactions++;
-            emit viewPost(block.number ,Posts[randTag][randIndex]);
+            randIndex = uint(keccak256(abi.encodePacked(block.timestamp,block.difficulty, msg.sender))) % postCount[tag];
+            Posts[tag][randIndex].interactions++;
+            return Posts[tag][randIndex];
         }
 
         // Function to fetch posts for user

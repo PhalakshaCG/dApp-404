@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.9;
-import "./Conversions.sol";
 
 contract Advertise{
 
@@ -60,9 +59,9 @@ contract Advertise{
         require(tag<numTags && tag >=0,"Tag Invalid");
         require(numAdsInTag[tag]>id,"Ad not found");
         require(Ads[tag][id].adOwner==msg.sender,"You are not the Ad owner");
-        require(Conversions.weiToGwei(msg.value)>=1,"Insufficient amount");
+        require(weiToGwei(msg.value)>=1,"Insufficient amount");
         deposit();
-        Ads[tag][id].remainingViewsPaidFor+=Conversions.weiToGwei(msg.value);
+        Ads[tag][id].remainingViewsPaidFor+=weiToGwei(msg.value);
     }
 
     function balanceOf() public view returns(uint) {
@@ -150,4 +149,28 @@ contract Advertise{
         makeNewDummyAd(2,"CricStar",200,"<div><canvas id=\"canvas\" width=\"375\" height=\"312\" style=\"position: absolute; display: block; background-color: rgb(255, 255, 255); width: 300px; height: 250px;\"></canvas></div>");
     }
     
+    //Utils
+    function etherToWei(uint valueEther) public pure returns (uint){
+       return valueEther*(10**18);
+    }
+
+    function weiToEther(uint valueWei) public pure returns (uint){
+       return valueWei/(10**18);
+    }
+
+    function etherToGWei(uint valueEther) public pure returns (uint){
+       return valueEther*(10**9);
+    }
+
+    function gweiToEther(uint valueGwei) public pure returns (uint){
+       return valueGwei/(10**9);
+    }
+
+    function weiToGwei(uint valueWei) public pure returns (uint){
+        return valueWei/(10**9);
+    }
+
+    function gweiToWei(uint valueGwei) public pure returns (uint){
+        return valueGwei*(10**9);
+    }
 }

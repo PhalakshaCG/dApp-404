@@ -9,9 +9,17 @@ import { AuthContext } from "../context/AuthContext";
 import Signup from "./Signup";
 import MaximizedPost from "../components/MaximizedPost";
 import ReportPost from "../components/ReportPost";
+import getAdByTag from "../helper/getAdByTags";
 
 function Home() {
-  const { contract, isLoggedIn, getPA, backendContract, backend_provider } = useContext(AuthContext);
+  const {
+    contract,
+    isLoggedIn,
+    getPA,
+    backendContract,
+    backend_provider,
+    backendAdContract,
+  } = useContext(AuthContext);
   const tags = [1, 2, 3, 4, 5];
   const [posts, setPosts] = useState([]);
 
@@ -22,12 +30,19 @@ function Home() {
         .then((data) => {
           setRegister(!data);
         });
+      // getAdByTag(backend_provider, backendAdContract, [1]);
     }
     checkProfile();
     // if (true) {
     //   setRegister(true);
     // }
-    getPostByTags(backend_provider, backendContract, tags, 5).then((_posts) => {
+    getPostByTags(
+      backend_provider,
+      backendContract,
+      backendAdContract,
+      tags,
+      5
+    ).then((_posts) => {
       setPosts(_posts);
     });
   }, [isLoggedIn]);
@@ -61,16 +76,23 @@ function Home() {
         <div className="posts mt-5 ">
           {posts.map((post) => {
             if (post.title) {
+              let ret = "";
+              if (post.ad) {
+                ret += `${post.ad.content}`;
+              }
               return (
-                <Post
-                  key={post.id}
-                  title={post.title}
-                  description={post.description}
-                  tags={post.tags}
-                  setPostData={setPostData}
-                  setMaximizedPost={setMaximizedPost}
-                  setReportPost={setReportPost}
-                />
+                <div>
+                  <Post
+                    key={post.id}
+                    title={post.title}
+                    description={post.description}
+                    tags={post.tags}
+                    setPostData={setPostData}
+                    setMaximizedPost={setMaximizedPost}
+                    setReportPost={setReportPost}
+                  />{" "}
+                  <div style={{textAlign:"center"}}>{ret}</div>
+                </div>
               );
             }
             return <></>;

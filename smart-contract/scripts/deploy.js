@@ -9,10 +9,12 @@ const hre = require("hardhat");
 async function main() {
   const Article = await hre.ethers.getContractFactory("Article");
   const article = await Article.deploy();
-
   await article.deployed();
+  const Advertise = await hre.ethers.getContractFactory("Advertise");
+  const advertise =  await Advertise.deploy();
+  await advertise.deployed();
 
-  console.log(`Contract deployed at ${article.address}`);
+  console.log(`Contract Article deployed at ${article.address}`,`Contract Advertise deployed at ${advertise.address}`);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

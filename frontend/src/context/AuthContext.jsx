@@ -1,7 +1,7 @@
 import React, { createContext, useState } from "react";
 import { ethers } from "ethers";
 import { abi } from "../utils/constants.js";
-import { contractAddress, rpc_url, private_key } from "../utils/constants.js";
+import { contractAddress, rpc_url, private_key, adContractAddress, adAbi } from "../utils/constants.js";
 const Web3 = require('web3');
 
 const { ethereum } = window;
@@ -12,6 +12,7 @@ export const AuthProvider = ({ children }) => {
   const [account, setAccount] = useState("");
   const [contract, setContract] = useState(null);
   const [backendContract, setBackendContract] = useState(null);
+  const [backendAdContract, setBackendAdContract] = useState(null);
   const [user, setUser] = useState(null);
   const [backend_provider, setBackendProvider] = useState(null);
   async function getProfile(publicAddress) {
@@ -41,6 +42,11 @@ export const AuthProvider = ({ children }) => {
         abi,
         contractAddress
       );
+      const adContract = new backendProvider.eth.Contract(
+        adAbi,
+        adContractAddress
+      );
+      setBackendAdContract(adContract);
       setBackendProvider(backendProvider);
       setBackendContract(tokenContract);
       return Contract;
@@ -77,6 +83,7 @@ export const AuthProvider = ({ children }) => {
         contract,
         backend_provider,
         backendContract,
+        backendAdContract,
         login,
         logout,
         isLoggedIn,
