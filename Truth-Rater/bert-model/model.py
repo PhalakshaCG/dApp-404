@@ -71,10 +71,13 @@ def bert_run():
             return { "Verdict" : "False", "Answer" : res.decode("utf-8")}
         else:
             # Get context/content
-            context = requests.get('http://localhost:4000/getarticles/' + question)
-            context = context.json()
-            print(context)
-            context = context[0]        #For now
+            try:
+                context = requests.get('http://localhost:4000/getarticles/' + question)
+                context = context.json()
+                print(context)
+                context = context[0]        #For now
+            except Exception:
+                return {"Verdict" : "False"}
 
             # Initialization of model
             model_name = "deepset/roberta-base-squad2"
