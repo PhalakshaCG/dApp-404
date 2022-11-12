@@ -67,7 +67,7 @@ const allRoutes = (app) => {
 
     .delete(deleteUserPosts);
   app
-    .route("/getarticles/")
+    .route("/getarticles/:url")
 
     .get(scrape);
 };
