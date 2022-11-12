@@ -1,9 +1,7 @@
-import getAdByTag from "./getAdByTags";
-
-const rpcCallForTransaction = async (contract, tag) => {
+const rpcCallForTransaction = async (contract, tag, id) => {
     try {
       console.log(`Performing RPC`);
-      const post = await contract.methods.getPostByTag(tag).call();
+      const post = await contract.methods.getPostByID(id, tag).call();
       console.log(post)
       return post;
     } catch (error) {
@@ -12,23 +10,15 @@ const rpcCallForTransaction = async (contract, tag) => {
     }
   };
 
-const getPostByTags = async (Contract, adContract, tags, limit) => {
-         
-    tags = [1,2,5]
+const getPostByID = async (Contract, tags) => {
     const tag_list_json = await fetch("http://localhost:4000/tags");
     const tag_list = await tag_list_json.json();
     let posts = []
-    for(let i=0; i<limit; i++){
-      let tag = tags[i % tags.length];
-      let post = await rpcCallForTransaction( Contract, tag);
+    for(let i=0; i<tags.length; i++){
+      let tag = tags[i];
+      let post = await rpcCallForTransaction( Contract, tag.tagid, tag.postid);
       if(!post)
         continue;
-      if(i==2){
-        getAdByTag(adContract, [0,1,2]).then((ad)=>{
-          console.log(ad, post);
-          post.ad = ad;
-        })
-      }
       post = {
             id: parseInt(post.id),
             title: post.headline,
@@ -43,4 +33,4 @@ const getPostByTags = async (Contract, adContract, tags, limit) => {
     return posts;
 }
 
-export default getPostByTags;
+export default getPostByID;

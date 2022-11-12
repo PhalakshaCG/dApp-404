@@ -131,9 +131,10 @@ contract Advertise{
     }
 
 
-    function makeNewDummyAd (uint32 tag, string memory title,uint256 impressions, string memory content) internal{
+    function makeNewDummyAd (uint32 tag, string memory title,uint256 impressions, uint256 remainingViewsPaidFor,string memory content) internal{
         makeNewAd(tag,title,content);
         Ads[tag][numAdsInTag[tag]-1].impressions=impressions;
+        Ads[tag][numAdsInTag[tag]-1].remainingViewsPaidFor=remainingViewsPaidFor;
     } 
 
     function populate() internal{
@@ -143,11 +144,11 @@ contract Advertise{
         createNewTag("Sports");
         createNewTag("Appliances");
 
-        makeNewDummyAd(0,"BIJU EdTech",600,"<div><div id=\"animation_container\" style=\"background-color:rgba(255, 255, 255, 1.00); width:300px; height:250px\"><canvas height=\"312\" id=\"canvas\" style=\"position: absolute; display: block; background-color: rgb(255, 255, 255); width: 300px; height: 250px;\" width=\"375\"></canvas><div id=\"dom_overlay_container\" style=\"pointer-events:none; overflow:hidden; width:300px; height:250px; position: absolute; left: 0px; top: 0px; display: block;\"></div></div></div>");
-        makeNewDummyAd(1,"Starlight",6000,"<div><div class=\"image\"><img src=\"https://cdn.myanimelist.net/resources/mxj_panel/2022/20221104_writingcontest.png\"></div></div>");
-        makeNewDummyAd(2,"Khilla Bats",70000,"<div><div class=\"rightrail--promo rightrail--promo\"><a class=\"rightrail--promo__details\" target=\"_self\" href=\"/events/tc-sessions-crypto-2022/?promo=rightnav&amp;display=true\"><div class=\"rightrail--promo__details-left\"><div class=\"gradient-text gradient-text--green-gradient\"><h2 class=\"rightrail--promo__details-left__title gradient-text\">TechCrunch Sessions: Crypto</h2></div></div><div class=\"rightrail--promo__details-right\"><div class=\"rightrail--promo__details-right__location\">Miami, Florida November 17</div></div></a><a class=\"button button--black button--secondary\" target=\"_self\" href=\"/events/tc-sessions-crypto-2022/?promo=rightnav&amp;display=true\">Register Now</a></div></div>");
-        makeNewDummyAd(2,"CricStar",200,"<div><canvas id=\"canvas\" width=\"375\" height=\"312\" style=\"position: absolute; display: block; background-color: rgb(255, 255, 255); width: 300px; height: 250px;\"></canvas></div>");
-    }
+        makeNewDummyAd(0,"BIJU EdTech",600,10,'<div><div id=\"animation_container\" style=\"background-color:rgba(255, 255, 255, 1.00); width:300px; height:250px\"><canvas height=\"312\" id=\"canvas\" style=\"position: absolute; display: block; background-color: rgb(255, 255, 255); width: 300px; height: 250px;\" width=\"375\"></canvas><div id=\"dom_overlay_container\" style=\"pointer-events:none; overflow:hidden; width:300px; height:250px; position: absolute; left: 0px; top: 0px; display: block;\"></div></div></div>');
+        makeNewDummyAd(1,"Starlight",6000,15,'<div><div class=\"image\"><img src=\"https://cdn.myanimelist.net/resources/mxj_panel/2022/20221104_writingcontest.png\"></div></div>');
+        makeNewDummyAd(2,"Khilla Bats",70000,200,'<div><div class=\"rightrail--promo rightrail--promo\"><a class=\"rightrail--promo_details\" target=\"_self\" href=\"/events/tc-sessions-crypto-2022/?promo=rightnav&amp;display=true\"><div class=\"rightrail--promodetails-left\"><div class=\"gradient-text gradient-text--green-gradient\"><h2 class=\"rightrail--promodetails-lefttitle gradient-text\">TechCrunch Sessions: Crypto</h2></div></div><div class=\"rightrail--promodetails-right\"><div class=\"rightrail--promodetails-right_location\">Miami, Florida November 17</div></div></a><a class=\"button button--black button--secondary\" target=\"_self\" href=\"/events/tc-sessions-crypto-2022/?promo=rightnav&amp;display=true\">Register Now</a></div></div>');
+        makeNewDummyAd(2,"CricStar",200,2,'<div><canvas id=\"canvas\" width=\"375\" height=\"312\" style=\"position: absolute; display: block; background-color: rgb(255, 255, 255); width: 300px; height: 250px;\"></canvas></div>');
+    } 
     
     //Utils
     function etherToWei(uint valueEther) public pure returns (uint){

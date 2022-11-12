@@ -26,7 +26,7 @@ export const AuthProvider = ({ children }) => {
   const createEthereumContract = async () => {
     try {
       if (!ethereum) return console.log("Please install metamask");
-      const provider = new ethers.providers.Web3Provider(ethereum);
+      
       let backendProvider = new Web3(rpc_url);
       backendProvider.eth.accounts.wallet.add(private_key);
       const _account = await ethereum.request({
@@ -34,8 +34,8 @@ export const AuthProvider = ({ children }) => {
       });
       await getProfile(_account[0]);
       setAccount(_account[0]);
-      const signer = provider.getSigner();
-      const Contract = new ethers.Contract(contractAddress, abi, signer);
+      // const signer = provider.eth.accounts;
+      const Contract = new backendProvider.eth.Contract(abi, contractAddress);
       console.log("Logged in as:", _account);
 
       const tokenContract = new backendProvider.eth.Contract(

@@ -37,7 +37,6 @@ function Home() {
     //   setRegister(true);
     // }
     getPostByTags(
-      backend_provider,
       backendContract,
       backendAdContract,
       tags,
@@ -76,9 +75,11 @@ function Home() {
         <div className="posts mt-5 ">
           {posts.map((post) => {
             if (post.title) {
-              let ret = "";
+              let ad = {
+                __html: ""
+              };
               if (post.ad) {
-                ret += `${post.ad.content}`;
+                ad.__html = `<h>Advertisement</h>${post.ad.content}`;
               }
               return (
                 <div>
@@ -91,7 +92,7 @@ function Home() {
                     setMaximizedPost={setMaximizedPost}
                     setReportPost={setReportPost}
                   />{" "}
-                  <div style={{textAlign:"center"}}>{ret}</div>
+                  <div style={{textAlign:"center", padding:20, justifyContent:"center"} } dangerouslySetInnerHTML = {ad}></div>
                 </div>
               );
             }

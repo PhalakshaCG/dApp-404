@@ -56,6 +56,7 @@ function ConfirmPost({
     let rating = 85000000;
     post(
       context.contract,
+      context.backend_provider,
       context.account,
       "NewsLang",
       tag[0].id,

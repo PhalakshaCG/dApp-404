@@ -26,6 +26,7 @@ function Post({
               className="w-[70%] bg-inherit focus:outline-none border-b-black border-b-2 text-2xl text-[#D1F5FF]"
               type="text"
               placeholder="  Heading"
+              style={{textShadow:"2px 2px rgb(100, 149, 237)"}}
             >
               {title}
             </span>

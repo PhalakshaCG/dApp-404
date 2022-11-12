@@ -2,29 +2,40 @@ import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 import "../static/Common.css";
 import MyPost from "../components/MyPost";
-import getPostByTags from "../helper/getPostsByTags";
+import getPostByID from "../helper/getPostsByID";
 
 function Profile() {
   const { getUser } = useContext(AuthContext);
   const [user, setUser] = useState("");
   const [name, setName] = useState("");
-  const { contract } = useContext(AuthContext);
+  const { contract, backendContract } = useContext(AuthContext);
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    const tags = [1, 2, 3, 4, 5];
+    const tags = [1, 2, 5];
     setUser(getUser());
     let Name = getUser()?.name;
     const NameArray = Name.split(" ");
     Name = "";
-    for (let i = 0; i < NameArray.length; i++) {
+    for (let i = 0; i< NameArray.length; i++) {
       Name = Name + NameArray[i][0].toUpperCase();
     }
     setName(Name);
-    getPostByTags(contract, tags, 3).then((_posts) => {
-      setPosts(_posts);
-      console.log(_posts);
-    });
+    
+    if(user){
+      console.log("http://localhost:4000/post/getuserposts/"+user?.public_id);
+      fetch( "http://localhost:4000/post/getuserposts/"+user?.public_id)
+      .then((data)=>{
+      console.log(data)
+      data.json().then((tags)=>{
+        console.log(tags)
+          getPostByID(backendContract, tags).then((_posts) => {
+            setPosts(_posts);
+            console.log(_posts);
+          });
+        })    
+      })
+  }
   }, [contract, getUser]);
 
   return (
