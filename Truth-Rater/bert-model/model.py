@@ -73,8 +73,8 @@ def bert_run():
             sim = check_similiarity(str(res),res_query)
             print(sim)
             if float(sim) >= 0.75:
-                return { "Verdict" : "True", "Answer" : res}
-            return { "Verdict" : "False", "Answer" : res}
+                return { "Verdict" : "True", "Answer" : str(res)}
+            return { "Verdict" : "False", "Answer" : str(res)}
         else:
             # Initialization of model
             model_name = "deepset/roberta-base-squad2"
