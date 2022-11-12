@@ -25,7 +25,6 @@ const getPostByTags = async (Contract, adContract, tags, limit) => {
         continue;
       if(i==2){
         getAdByTag(adContract, [0,1,2]).then((ad)=>{
-          console.log(ad, post);
           post.ad = ad;
         })
       }
@@ -36,10 +35,12 @@ const getPostByTags = async (Contract, adContract, tags, limit) => {
             tags: [{
                     id: post.tag,
                     name: tag_list[post.tag -1].name,//should add db query here
-                }]
+                }],
+            reportIDs: post.reports,
         }
       posts.push(post);
     }
+    console.log(posts);
     return posts;
 }
 

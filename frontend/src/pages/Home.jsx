@@ -91,6 +91,7 @@ function Home() {
                     setPostData={setPostData}
                     setMaximizedPost={setMaximizedPost}
                     setReportPost={setReportPost}
+                    reportIDs={post.reportIDs}
                   />{" "}
                   <div style={{textAlign:"center", padding:20, justifyContent:"center"} } dangerouslySetInnerHTML = {ad}></div>
                 </div>

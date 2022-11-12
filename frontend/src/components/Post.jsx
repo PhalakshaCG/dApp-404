@@ -3,20 +3,31 @@ import { useState } from "react";
 import open from "../assets/open.svg";
 import report from "../assets/report.svg";
 import "../static/Common.css";
-
 import _ from "lodash";
-
+import { AuthContext } from "../context/AuthContext";
+import { useContext } from "react";
+import getPostByID from "../helper/getPostsByID";
 function Post({
+  id,
   title,
   description,
   tags,
   setPostData,
   setMaximizedPost,
   setReportPost,
+  reportIDs,
 }) {
-  const [count, setCount] = useState(2);
+  const [count, setCount] = useState(reportIDs.length);
   const [showReportPosts, setShowReportPosts] = useState(false);
-
+  const [posts, setPosts] = useState([]);
+  const {Contract} = useContext(AuthContext);
+  reportIDs = reportIDs.map((id)=>{
+    return [0, id]
+  });
+  getPostByID(Contract, reportIDs)
+  .then((_posts)=>{
+    setPosts(_posts);
+  });
   return (
     <div className="pt-10 pl-[6rem] pr-[4rem] mb-3">
       <div>
@@ -96,28 +107,34 @@ function Post({
         </div>
       </div>
       {showReportPosts ? (
-        <div className="mt-7 px-10 w-full">
-          {_.range(1, count + 1).map((i) => (
-            <div key={i}>
-              <div className="content flex flex-col">
-                <div className="">
-                  <span
-                    className="w-[70%] bg-inherit focus:outline-none border-b-black border-b-2 text-2xl text-[#D1F5FF]"
-                    type="text"
-                    placeholder="  Heading"
-                  >
-                    {title}
-                  </span>
-                </div>
-                <div className="newpost my-5">
-                  <span className="newpost-text w-[90%] text-[#D1F5FF] bg-inherit focus:outline-none resize-none">
-                    {description}
-                  </span>
-                </div>
+        <div className="posts mt-5 ">
+        {posts.map((post) => {
+          if (post.title) {
+            let ad = {
+              __html: ""
+            };
+            if (post.ad) {
+              ad.__html = `<h>Advertisement</h>${post.ad.content}`;
+            }
+            return (
+              <div>
+                <Post
+                  key={post.id}
+                  title={post.title}
+                  description={post.description}
+                  tags={post.tags}
+                  setPostData={setPostData}
+                  setMaximizedPost={setMaximizedPost}
+                  setReportPost={setReportPost}
+                  reportIDs={post.reportIDs}
+                />{" "}
+                <div style={{textAlign:"center", padding:20, justifyContent:"center"} } dangerouslySetInnerHTML = {ad}></div>
               </div>
-            </div>
-          ))}
-        </div>
+            );
+          }
+          return <></>;
+        })}
+      </div>
       ) : (
         <></>
       )}
