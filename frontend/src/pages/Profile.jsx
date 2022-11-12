@@ -3,6 +3,7 @@ import { AuthContext } from "../context/AuthContext";
 import "../static/Common.css";
 import MyPost from "../components/MyPost";
 import getPostByID from "../helper/getPostsByID";
+import refresh from "../assets/refresh.svg";
 
 function Profile() {
   const { getUser } = useContext(AuthContext);
@@ -11,32 +12,48 @@ function Profile() {
   const { contract, backendContract } = useContext(AuthContext);
   const [posts, setPosts] = useState([]);
 
+  const getPosts = async () => {
+    fetch("http://localhost:4000/post/getuserposts/" + user?.public_id).then(
+      (data) => {
+        console.log(data);
+        data.json().then((tags) => {
+          console.log(tags);
+          getPostByID(backendContract, tags).then((_posts) => {
+            setPosts(_posts);
+            console.log(_posts);
+          });
+        });
+      }
+    );
+  };
+
   useEffect(() => {
     const tags = [1, 2, 5];
     setUser(getUser());
     let Name = getUser()?.name;
     const NameArray = Name.split(" ");
     Name = "";
-    for (let i = 0; i< NameArray.length; i++) {
+    for (let i = 0; i < NameArray.length; i++) {
       Name = Name + NameArray[i][0].toUpperCase();
     }
     setName(Name);
-    
-    if(user){
-      console.log("http://localhost:4000/post/getuserposts/"+user?.public_id);
-      fetch( "http://localhost:4000/post/getuserposts/"+user?.public_id)
-      .then((data)=>{
-      console.log(data)
-      data.json().then((tags)=>{
-        console.log(tags)
-          getPostByID(backendContract, tags).then((_posts) => {
-            setPosts(_posts);
-            console.log(_posts);
+
+    if (user) {
+      console.log("http://localhost:4000/post/getuserposts/" + user?.public_id);
+      fetch("http://localhost:4000/post/getuserposts/" + user?.public_id).then(
+        (data) => {
+          console.log(data);
+          data.json().then((tags) => {
+            console.log(tags);
+            getPostByID(backendContract, tags).then((_posts) => {
+              setPosts(_posts);
+              console.log(_posts);
+            });
           });
-        })    
-      })
-  }
-  }, [contract, getUser]);
+        }
+      );
+    }
+  }, []);
 
   return (
     <div className="">
@@ -70,7 +87,19 @@ function Profile() {
           </div>
         </div>
       </div>
-      <div className="px-[14rem] mt-[2rem] text-3xl ">My Posts</div>
+      <div className="px-[14rem] flex justify-between mt-[2rem] text-3xl ">
+        <div className="">My Posts</div>
+        <div className="pl-3 cursor-pointer">
+          <img
+            className="w-8"
+            src={refresh}
+            alt=""
+            onClick={() => {
+              getPosts();
+            }}
+          />
+        </div>
+      </div>
       <div className="mt-5">
         {posts.map((post) => {
           if (post.title) {

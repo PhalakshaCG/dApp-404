@@ -14,6 +14,7 @@ export const scrape = async (req, res) => {
     "pageSize=5&" +
     "apiKey=6da6eafef0ff46e68bfaee42434398c6";
   console.log(req.params.url);
+  console.log(url);
   var articles = new Array();
   var JsonObject;
 

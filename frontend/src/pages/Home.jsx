@@ -36,14 +36,11 @@ function Home() {
     // if (true) {
     //   setRegister(true);
     // }
-    getPostByTags(
-      backendContract,
-      backendAdContract,
-      tags,
-      5
-    ).then((_posts) => {
-      setPosts(_posts);
-    });
+    getPostByTags(backendContract, backendAdContract, tags, 5).then(
+      (_posts) => {
+        setPosts(_posts);
+      }
+    );
   }, [isLoggedIn]);
 
   const [register, setRegister] = useState(false);
@@ -76,7 +73,7 @@ function Home() {
           {posts.map((post) => {
             if (post.title) {
               let ad = {
-                __html: ""
+                __html: "",
               };
               if (post.ad) {
                 ad.__html = `<h>Advertisement</h>${post.ad.content}`;
@@ -88,12 +85,22 @@ function Home() {
                     title={post.title}
                     description={post.description}
                     tags={post.tags}
+                    interactions={5} // Pass in the number of interactions
+                    truthRating={10506600} // Pass in truth value
                     setPostData={setPostData}
                     setMaximizedPost={setMaximizedPost}
                     setReportPost={setReportPost}
                     reportIDs={post.reportIDs}
+                    count={2} // Pass in the number of reports
                   />{" "}
-                  <div style={{textAlign:"center", padding:20, justifyContent:"center"} } dangerouslySetInnerHTML = {ad}></div>
+                  <div
+                    style={{
+                      textAlign: "center",
+                      padding: 20,
+                      justifyContent: "center",
+                    }}
+                    dangerouslySetInnerHTML={ad}
+                  ></div>
                 </div>
               );
             }
