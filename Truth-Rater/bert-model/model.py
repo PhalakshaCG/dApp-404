@@ -49,22 +49,11 @@ def bert_run():
     # Run interface
     if request.method == 'POST':
         request_data = request.args
-        # request_data = request.get_json(force=True,silent=True)
-        # print(request_data.get('context'))
-        # context = request_data.get('context')
-        # question = request_data.get('question')
         query = request_data.get('claim',default='',type=str)
         
         # Generate Questions
         question = question_generator(query)
         print(question)
-
-        # Get context/content
-        context = requests.get('http://localhost:4000/getarticles/' + question)
-        context = context.json()
-        print(context)
-        context = context[0]
-        #context = "BEIJING, Nov 1 (Reuters) - China's President Xi Jinping sent a message of condolence to India's Prime Minister Narendra Modi and Indian President Droupadi Murmu over a deadly bridge collapse in Gujarat, Western India, state broadcaster CCTV reported.\"On behalf of the Chinese government and the Chinese people, I would like to express our deep condolences to the victims and extend our sincere sympathy to their families and the injured,\" Xi said, according to CCTV.The death toll from the foot bridge collapse rose to 135 on Tuesday with search operations entering a third day, although authorities said nearly all those believed to have been missing are now accounted for.Reporting by Martin Quin Pollard and the Beijing Newsroom; Editing by Andrew HeavensOur Standards: The Thomson Reuters Trust Principles."
 
         # context = request_data['context']
         # question = request_data['question']
@@ -77,10 +66,19 @@ def bert_run():
             res_query = query
             sim = check_similiarity(str(res),res_query)
             print(sim)
-            if sim >= 0.75:
-                return { "Verdict" : "True", "Answer" : res}
-            return { "Verdict" : "False", "Answer" : res}
+            if float(sim) >= 0.75:
+                return { "Verdict" : "True", "Answer" : res.decode("utf-8")}
+            return { "Verdict" : "False", "Answer" : res.decode("utf-8")}
         else:
+            # Get context/content
+            try:
+                context = requests.get('http://localhost:4000/getarticles/' + question)
+                context = context.json()
+                print(context)
+                context = context[0]        #For now
+            except Exception:
+                return {"Verdict" : "False"}
+
             # Initialization of model
             model_name = "deepset/roberta-base-squad2"
             nlp = pipeline('question-answering', model=model_name, tokenizer=model_name)
@@ -97,7 +95,8 @@ def bert_run():
             res_query = query
             sim = check_similiarity(str(res['answer']),res_query)
             print(sim)
-            if sim >= 0.75:
+            if float(sim) >= 0.75:
+                r.set(name=question,value=res['answer'])
                 return { "Verdict" : "True", "Answer" : res}
             return { "Verdict" : "False", "Answer" : res}
 
