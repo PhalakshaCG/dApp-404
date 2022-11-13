@@ -2,8 +2,9 @@ import { useRef, useState } from "react";
 const NewsLang = () => {
     const dragItem = useRef();
     const dragOverItem = useRef();
-    const [list, setList] = useState(['Item 1','Item 2','Item 3','Item 4','Item 5','Item 6']);
-   
+    const [heading, setHeading] = useState("");
+    const [list, setList] = useState(['Subject','Object','Sentence','Connector']);
+   const colors = ['lightblue','orange','cyan','lightgreen']
     const dragStart = (e, position) => {
       dragItem.current = position;
       console.log(e.target.innerHTML);
@@ -17,27 +18,42 @@ const NewsLang = () => {
     const drop = (e) => {
       const copyListItems = [...list];
       const dragItemContent = copyListItems[dragItem.current];
-      copyListItems.splice(dragItem.current, 1);
-      copyListItems.splice(dragOverItem.current, 0, dragItemContent);
-      dragItem.current = null;
-      dragOverItem.current = null;
-      setList(copyListItems);
+      document.getElementById("Heading").value = heading+" "+dragItemContent;
+      setHeading(heading+" "+dragItemContent);
+      
     };
    
     return (
-      <>
+      <><input type="text" id="Heading" placeholder="News Language" style={{fontSize:'30px',backgroundColor:"inherit", borderColor:"white", borderWidth:"2px"}         
+        } onInput={()=>{
+            setHeading(this.value)
+        }
+      }/>
       {
       list&&
       list.map((item, index) => (
-        <div style={{backgroundColor:'lightblue', margin:'20px 25%', textAlign:'center', fontSize:'40px'}}
+        <input style={{cursor:"grab", backgroundColor:colors[index], margin:'5px 25%',  textAlign:'center', fontSize:'25px'}}
           onDragStart={(e) => dragStart(e, index)}
           onDragEnter={(e) => dragEnter(e, index)}
           onDragEnd={drop}
           key={index}
-          draggable>
-            {item}
-        </div>
+          draggable
+          placeholder={item}
+          onInputCapture={(e)=>{
+            console.log(" ")
+            let copyItems = list
+            copyItems[index] = e.target.value
+            setList(copyItems)
+          }}
+          >
+        </input>
         ))}
+        <button onClick={()=>{
+            document.getElementById("Heading").value=""
+            setHeading("")
+            }}>
+            Clear
+        </button>
       </>
     );
   };
