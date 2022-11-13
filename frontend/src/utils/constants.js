@@ -1,8 +1,8 @@
 import article from './Article.json'
 import advertise from './Advertise.json'
 
-export const contractAddress = "0xEB1966cd16A2Deb1270A8600FD7dF6C5eD31c301"
-export const adContractAddress = "0x19176bd09e161Be8d229485188f1c96a94CDFF6B"
+export const contractAddress = "0x3A44FD4549e15d8B017E2BcC699087f77E6653f3"
+export const adContractAddress = "0x9Ae170285f037b44c4a717748cfEaBbcA302dC75"
 export const abi =  article.abi;
 export const adAbi = advertise.abi;
 export const rpc_url = "https://polygon-mumbai.g.alchemy.com/v2/kMNv2zP52eGL5HBkC1pwMzpaJ8NVaRGn";

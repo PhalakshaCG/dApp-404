@@ -1,5 +1,7 @@
+import { startLoading, stopLoading } from "./loader";
 const postToBlockchain = async (Contract, Provider, address,  newsLang, tags, headline, content, rating) => {
       console.log(address,  newsLang, tags, headline, content, rating);
+      startLoading();
       let nonce = await Provider.eth.getTransactionCount(address);
       console.log(nonce);
       let post = await Contract.methods.postArticle(address,  newsLang, tags, headline, content, rating).send({
@@ -8,6 +10,7 @@ const postToBlockchain = async (Contract, Provider, address,  newsLang, tags, he
             nonce
       })
       console.log(post.events.post.returnValues)
+      stopLoading();
       alert("Article posted successfully")
       fetch("http://localhost:4000/post/addpost",{
             method: "post",
@@ -23,4 +26,4 @@ const postToBlockchain = async (Contract, Provider, address,  newsLang, tags, he
       .catch((err)=>console.log(err));
 };
 
-module.exports = postToBlockchain;
+export default postToBlockchain;

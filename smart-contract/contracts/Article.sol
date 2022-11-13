@@ -99,7 +99,9 @@
             require(tag < tagCount && tag >=0, "Invalid tag");
             require(postCount[tag]>0);
             uint256 randIndex;
+            do{
             randIndex = uint(keccak256(abi.encodePacked(block.timestamp,block.difficulty, msg.sender))) % postCount[tag];
+            }while(!Posts[tag][randIndex].truth);
             Posts[tag][randIndex].interactions++;
             return Posts[tag][randIndex];
         }

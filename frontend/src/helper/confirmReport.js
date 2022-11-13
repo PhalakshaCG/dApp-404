@@ -1,6 +1,9 @@
+const { startLoading, stopLoading } = require("./loader");
+
 const confirmReport = async (contract, Provider, id, address) => {
     try {
         console.log(`Performing RPC`);
+        startLoading();
         let nonce = await Provider.eth.getTransactionCount(address);
         console.log(id);
         const _post = contract.methods.confirmReport(id);
@@ -12,11 +15,13 @@ const confirmReport = async (contract, Provider, id, address) => {
         }).then((res)=>{
             alert("Report confirmed");
             console.log(res);
+            stopLoading();
         });
     } catch (error) {
         console.error('Error in transferTokens >', error);
+        stopLoading();
         return false;
     }
 };
 
-module.exports = confirmReport
+export default confirmReport

@@ -1,4 +1,7 @@
+const { startLoading, stopLoading } = require("./loader");
+
 const postReportArticle = async (Contract, Provider,reportTag, reportID, address,  newsLang, headline, content, rating) => {
+    startLoading();
     console.log(address,  newsLang, headline, content, rating);
     let nonce = await Provider.eth.getTransactionCount(address);
     console.log({
@@ -10,6 +13,7 @@ const postReportArticle = async (Contract, Provider,reportTag, reportID, address
           gas:1000000,
           nonce
     })
+    stopLoading();
     alert("Review posted")
     fetch("http://localhost:4000/post/addpost",{
             method: "post",
@@ -26,4 +30,4 @@ const postReportArticle = async (Contract, Provider,reportTag, reportID, address
     console.log(post)
 };
 
-module.exports = postReportArticle;
+export default postReportArticle;
