@@ -1,6 +1,9 @@
+const { startLoading, stopLoading } = require("./loader");
+
 const withdraw = async (contract, Provider, id, tag, address) => {
     try {
         console.log(`Performing RPC`);
+        startLoading();
         let nonce = await Provider.eth.getTransactionCount(address);
         console.log(id, tag);
         const _post = contract.methods.withdraw(id, parseInt(tag));
@@ -10,6 +13,7 @@ const withdraw = async (contract, Provider, id, tag, address) => {
         gas:10000000,
         nonce
         }).then((res)=>{
+            stopLoading();
             alert("Amount withdrawn");
             console.log(res);
         });

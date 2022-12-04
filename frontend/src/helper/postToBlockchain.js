@@ -2,6 +2,7 @@ import { startLoading, stopLoading } from "./loader";
 const postToBlockchain = async (Contract, Provider, address,  newsLang, tags, headline, content, rating) => {
       console.log(address,  newsLang, tags, headline, content, rating);
       startLoading();
+      rating = 15345000
       let nonce = await Provider.eth.getTransactionCount(address);
       console.log(nonce);
       let post = await Contract.methods.postArticle(address,  newsLang, tags, headline, content, rating).send({

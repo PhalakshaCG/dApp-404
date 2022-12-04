@@ -74,11 +74,11 @@ export const updateProfileByID = (req, res) => {
 
 export const deleteProfileByID = (req, res) => {
   Profile.remove(
-    { _id: req.params.profileID },
+    { public_id: req.params.profileID },
 
     (err, profile) => {
       if (err) {
-        res.send(err);
+        return res.send(err);
       }
 
       res.json({ message: "The profile was deleted." });
