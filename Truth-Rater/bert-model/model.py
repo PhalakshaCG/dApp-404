@@ -6,6 +6,9 @@ from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 import requests
 
+import warnings
+warnings.filterwarnings("ignore")
+
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
@@ -53,11 +56,11 @@ def bert_run():
         
         # Generate Questions
         question = question_generator(query)
-        print(question)
+        print("Query Question : ",question)
 
         # context = request_data['context']
         # question = request_data['question']
-        print(request_data)
+        print("Claim : ",query)
 
         res = r.get(question)
         
@@ -65,7 +68,7 @@ def bert_run():
             # Do Similiarity Checking
             res_query = query
             sim = check_similiarity(str(res),res_query)
-            print(sim)
+            print("Similiarity = ",sim)
             if float(sim) >= 0.75:
                 return { "Verdict" : "True", "Answer" : res.decode("utf-8")}
             return { "Verdict" : "False", "Answer" : res.decode("utf-8")}
@@ -74,7 +77,7 @@ def bert_run():
             try:
                 context = requests.get('http://localhost:4000/getarticles/' + question)
                 context = context.json()
-                print(context)
+                print("Context : ", context)
                 context = context[0]        #For now
             except Exception:
                 return {"Verdict" : "False"}
@@ -94,7 +97,7 @@ def bert_run():
             # Do Similiarity Checking
             res_query = query
             sim = check_similiarity(str(res['answer']),res_query)
-            print(sim)
+            print("Similiarity = ",sim)
             if float(sim) >= 0.75:
                 r.set(name=question,value=res['answer'])
                 return { "Verdict" : "True", "Answer" : res}
