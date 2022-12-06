@@ -1,6 +1,6 @@
 from . import auth
 from flask_httpauth import HTTPBasicAuth
-from transformers import AutoModelForQuestionAnswering, AutoTokenizer, pipeline, AutoModelForSeq2SeqLM
+from transformers import AutoModelForQuestionAnswering, AutoTokenizer, pipeline, AutoModelForSeq2SeqLM, AutoModelWithLMHead
 import redis
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
@@ -29,13 +29,24 @@ def check_similiarity(str1,str2):
 
 
 def question_generator(context):
-    tokenizer = AutoTokenizer.from_pretrained("iarfmoose/t5-base-question-generator")
-    model = AutoModelForSeq2SeqLM.from_pretrained("iarfmoose/t5-base-question-generator")
-    ans = context
-    input = tokenizer.encode(ans, return_tensors="pt")
-    output = model.generate(input)
-    decoded = tokenizer.decode(output[0], skip_special_tokens=True)
-    return decoded
+    # tokenizer = AutoTokenizer.from_pretrained("iarfmoose/t5-base-question-generator")
+    # model = AutoModelForSeq2SeqLM.from_pretrained("iarfmoose/t5-base-question-generator")
+    # ans = context
+    # input = tokenizer.encode(ans, return_tensors="pt")
+    # output = model.generate(input)
+    # decoded = tokenizer.decode(output[0], skip_special_tokens=True)
+    # return decoded
+    tokenizer = AutoTokenizer.from_pretrained("mrm8488/t5-base-finetuned-question-generation-ap")
+    model = AutoModelWithLMHead.from_pretrained("mrm8488/t5-base-finetuned-question-generation-ap")
+    input_text = "answer: %s  context: %s </s>" % ("", context)
+    features = tokenizer([input_text], return_tensors='pt')
+
+    output = model.generate(input_ids=features['input_ids'], 
+               attention_mask=features['attention_mask'],
+               max_length=64)
+
+    return tokenizer.decode(output[0])
+
 
 
 @app.route('/run', methods=['GET','POST'])
@@ -56,6 +67,8 @@ def bert_run():
         
         # Generate Questions
         question = question_generator(query)
+        question = question.split("<pad> question: ")[1]
+        question = question.split("</s>")[0]
         print("Query Question : ",question)
 
         # context = request_data['context']
