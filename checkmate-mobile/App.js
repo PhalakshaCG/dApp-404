@@ -1,12 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { useWalletConnect } from '@walletconnect/react-native-dapp'
-
+import './shim.js'
+import React from 'react';
 export default function App() {
   const connector = useWalletConnect();
 
   const connectWallet = React.useCallback(() => {
-    return connector.connect();
+    return connector.getConnection();
   }, [connector]);
 
   const killSession = React.useCallback(() => {
