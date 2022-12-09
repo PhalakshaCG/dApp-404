@@ -26,10 +26,14 @@ export const ProfileSchema = new schema({
   tags: {
     type: Array,
   },
-
+  avatar: {
+    data: Buffer,
+    ContentType: String,
+  },
   creation_date: {
     type: Date,
-
     default: Date.now,
   },
 });
+
+// module.exports = ProfileSchema = mongoose.model("Profile", ProfileSchema);
