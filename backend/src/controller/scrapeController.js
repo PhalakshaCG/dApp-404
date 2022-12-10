@@ -53,19 +53,7 @@ export const scrape = async (req, res) => {
   let search = req.params.url;
   encodeURI(search);
   console.log(search);
-<<<<<<< HEAD
-  let url =
-    "https://newsapi.org/v2/everything?" +
-    "q=" +
-    search +
-    "&" +
-    "pageSize=5&" +
-    "apiKey=6da6eafef0ff46e68bfaee42434398c6";
-  console.log(req.params.url);
-  console.log(url);
-=======
   var links = new Array();
->>>>>>> c320a88 (added backend web scraping script and apis)
   var articles = new Array();
   var JsonObject;
 
