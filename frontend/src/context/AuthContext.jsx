@@ -20,6 +20,7 @@ export const AuthProvider = ({ children }) => {
   const [backendAdContract, setBackendAdContract] = useState(null);
   const [user, setUser] = useState(null);
   const [backend_provider, setBackendProvider] = useState(null);
+
   async function getProfile(publicAddress) {
     fetch("http://localhost:4000/profile/" + publicAddress)
       .then((res) => res.json())
@@ -40,10 +41,10 @@ export const AuthProvider = ({ children }) => {
       await getProfile(_account[0]);
       setAccount(_account[0]);
       // const signer = provider.eth.accounts;
-      const Contract = new backendProvider.eth.Contract(abi, contractAddress);
+      // const Contract = new backendProvider.eth.Contract(abi, contractAddress);
       console.log("Logged in as:", _account);
-
-      const tokenContract = new backendProvider.eth.Contract(
+      let tokenContract = null
+      const Contract = tokenContract = new backendProvider.eth.Contract(
         abi,
         contractAddress
       );

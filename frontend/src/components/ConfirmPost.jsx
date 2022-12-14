@@ -3,6 +3,7 @@ import { AuthContext } from "../context/AuthContext";
 import post from "../helper/postToBlockchain";
 import Multiselect from "multiselect-react-dropdown";
 import NewsLang from "./NewsLang";
+import { ownerWallet } from "../utils/constants";
 
 function ConfirmPost({
   setConfirmPost,
@@ -58,7 +59,7 @@ function ConfirmPost({
     post(
       context.contract,
       context.backend_provider,
-      context.account,
+      ownerWallet,
       "NewsLang",
       tag[0].id,
       heading,
