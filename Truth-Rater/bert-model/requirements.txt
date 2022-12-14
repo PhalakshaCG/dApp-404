@@ -1,0 +1,6 @@
+Flask
+Flask-HTTPAuth
+transformers
+redis
+scikit-learn
+sentence-transformers
