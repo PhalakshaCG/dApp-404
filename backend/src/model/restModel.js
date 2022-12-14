@@ -8,11 +8,14 @@ export const ProfileSchema = new schema({
 
     required: "Please enter a name.",
   },
-  // _id: false,
   public_id: {
     type: String,
     required: "Please enter a public address",
     unique: true,
+  },
+  password: {
+    type: String,
+    required: "Please enter a password",
   },
   email: {
     type: String,
@@ -21,6 +24,9 @@ export const ProfileSchema = new schema({
     type: Number,
   },
   brownies: {
+    type: Number,
+  },
+  balance: {
     type: Number,
   },
   tags: {
@@ -35,5 +41,3 @@ export const ProfileSchema = new schema({
     default: Date.now,
   },
 });
-
-// module.exports = ProfileSchema = mongoose.model("Profile", ProfileSchema);
