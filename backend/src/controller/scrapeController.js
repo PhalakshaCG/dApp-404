@@ -74,7 +74,7 @@ export const scrape = async (req, res) => {
   async function getarticles(search) {
     const r1 = await googleNewsScraper({
       searchTerm: search,
-      prettyURLs: false,
+      prettyURLs: true,
       queryVars: {
         hl: "en-US",
         gl: "IN",
@@ -84,11 +84,7 @@ export const scrape = async (req, res) => {
       puppeteerArgs: [],
     });
     console.log(r1.link);
-    for (let i = 0; i < 5; i++) {
-      links[i] = r1[i].link;
-    }
-    console.log(links);
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 3; i++) {
       let firstResult = r1[i];
       console.log(firstResult);
       async function getscrape(firstResult) {
@@ -102,6 +98,9 @@ export const scrape = async (req, res) => {
       }
       promises.push(getscrape(firstResult));
     }
+    // for(int i = 0; i < 5; i++) {
+    //   links.push(articles[i]);
+    // }
   }
   await getarticles(search);
 
