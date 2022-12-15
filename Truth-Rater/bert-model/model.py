@@ -29,13 +29,6 @@ def check_similiarity(str1,str2):
 
 
 def question_generator(context):
-    # tokenizer = AutoTokenizer.from_pretrained("iarfmoose/t5-base-question-generator")
-    # model = AutoModelForSeq2SeqLM.from_pretrained("iarfmoose/t5-base-question-generator")
-    # ans = context
-    # input = tokenizer.encode(ans, return_tensors="pt")
-    # output = model.generate(input)
-    # decoded = tokenizer.decode(output[0], skip_special_tokens=True)
-    # return decoded
     tokenizer = AutoTokenizer.from_pretrained("mrm8488/t5-base-finetuned-question-generation-ap")
     model = AutoModelWithLMHead.from_pretrained("mrm8488/t5-base-finetuned-question-generation-ap")
     qs = []
@@ -83,7 +76,7 @@ def bert_run():
 
         # context = request_data['context']
         # question = request_data['question']
-        #Still to DO !!!!
+
         print("Claim : ",query)
 
         res = r.get(question)
@@ -99,10 +92,10 @@ def bert_run():
         else:
             # Get context/content
             try:
-                context = requests.get('http://localhost:4000/getarticles/' + question)
+                context = requests.get('http://34.28.83.35:4000/getarticles/' + question)
                 context = context.json()
                 print("Context : ", context)
-                context = context[0]        #For now
+                #context = context[0]        
             except Exception:
                 return {"Verdict" : "False"}
 
@@ -110,14 +103,20 @@ def bert_run():
             model_name = "deepset/roberta-base-squad2"
             nlp = pipeline('question-answering', model=model_name, tokenizer=model_name)
 
-            QA_input = {
-                'question': question,
-                'context': context
-            }
-            
-            #Results            
-            res = nlp(QA_input)
-            
+            # Evaluate and Results
+            m_sim = 0.0
+            res = {}
+            for c in context:
+                QA_input = {
+                    'question': question,
+                    'context': c
+                }
+                resq = nlp(QA_input)
+                tmp = float(check_similiarity(query,resq['answer']))
+                if (tmp >= m_sim):
+                    res = resq
+                    m_sim = tmp
+
             # Do Similiarity Checking
             res_query = query
             sim = check_similiarity(str(res['answer']),res_query)
