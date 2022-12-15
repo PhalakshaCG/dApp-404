@@ -38,15 +38,17 @@ def question_generator(context):
     # return decoded
     tokenizer = AutoTokenizer.from_pretrained("mrm8488/t5-base-finetuned-question-generation-ap")
     model = AutoModelWithLMHead.from_pretrained("mrm8488/t5-base-finetuned-question-generation-ap")
-    input_text = "answer: %s  context: %s </s>" % ("", context)
-    features = tokenizer([input_text], return_tensors='pt')
+    qs = []
+    for i in range(3):
+        input_text = "answer: %s  context: %s </s>" % ("" if i == 0 else context, context if i != 2 else "")
+        features = tokenizer([input_text], return_tensors='pt')
 
-    output = model.generate(input_ids=features['input_ids'], 
-               attention_mask=features['attention_mask'],
-               max_length=64)
+        output = model.generate(input_ids=features['input_ids'], 
+                attention_mask=features['attention_mask'],
+                max_length=64)
 
-    return tokenizer.decode(output[0])
-
+        qs.append(tokenizer.decode(output[0]))
+    return qs
 
 
 @app.route('/run', methods=['GET','POST'])
@@ -66,13 +68,22 @@ def bert_run():
         query = request_data.get('claim',default='',type=str)
         
         # Generate Questions
-        question = question_generator(query)
-        question = question.split("<pad> question: ")[1]
-        question = question.split("</s>")[0]
-        print("Query Question : ",question)
+        questions = question_generator(query)
+        question = ""
+        m_q_similar = 0.0
+        for qs in questions:
+            qs = qs.split("<pad> question: ")[1]
+            qs = qs.split("</s>")[0]
+            print("Query Question : ",qs)
+            q_similar = float(check_similiarity(qs,query))
+            if q_similar >= m_q_similar:
+                m_q_similar = q_similar
+                question = qs
+        print("\nProper Query Question : ",question)
 
         # context = request_data['context']
         # question = request_data['question']
+        #Still to DO !!!!
         print("Claim : ",query)
 
         res = r.get(question)
