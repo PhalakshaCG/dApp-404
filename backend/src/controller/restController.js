@@ -50,7 +50,7 @@ export const getProfileByID = (req, res) => {
       res.send(err);
     }
     console.log(profile);
-    res.json(profile);
+    res.json(profile?.profile);
   });
 };
 
@@ -93,7 +93,7 @@ export const getusertags = (req, res) => {
       res.send(err);
     }
     console.log(profile);
-    res.json(profile.tags);
+    res.json(profile?.tags);
   });
 };
 export const addTags = (req, res) => {

@@ -106,8 +106,7 @@ export const scrape = async (req, res) => {
 
   Promise.all(promises).then(function () {
     JsonObject = JSON.parse(JSON.stringify(articles));
-
-    res.json(JsonObject);
+    res.json(JsonObject ? JsonObject : "No articles found");
   });
   console.log("hello");
 };
