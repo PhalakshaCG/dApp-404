@@ -92,7 +92,7 @@ def bert_run():
         else:
             # Get context/content
             try:
-                context = requests.get('http://34.28.83.35:4000/getarticles/' + question)
+                context = requests.get('http://localhost:4000/getarticles/' + question)
                 context = context.json()
                 print("Context : ", context)
                 #context = context[0]        
