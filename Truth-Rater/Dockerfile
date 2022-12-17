@@ -1,6 +1,7 @@
 FROM python:3.10
 
 WORKDIR /truth-rater
+ENV FLASK_APP=bert-model
 
 RUN python3 -m venv env
 RUN . ./env/bin/activate 
