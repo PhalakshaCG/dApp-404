@@ -50,7 +50,7 @@ export const getProfileByID = (req, res) => {
       res.send(err);
     }
     console.log(profile);
-    res.json(profile?.profile);
+    res.json(profile ? profile : "profile not found");
   });
 };
 
