@@ -86,9 +86,11 @@ def bert_run():
             res_query = query
             sim = check_similiarity(str(res),res_query)
             print("Similiarity = ",sim)
-            if float(sim) >= 0.75:
-                return { "Verdict" : "True", "Answer" : res.decode("utf-8")}
-            return { "Verdict" : "False", "Answer" : res.decode("utf-8")}
+            return float(sim)
+            # if float(sim) >= 0.75:
+            #     #return { "Verdict" : "True", "Answer" : res.decode("utf-8")}
+            #     return float(sim)
+            # return { "Verdict" : "False", "Answer" : res.decode("utf-8")}
         else:
             # Get context/content
             try:
@@ -97,7 +99,8 @@ def bert_run():
                 print("Context : ", context)
                 #context = context[0]        
             except Exception:
-                return {"Verdict" : "False"}
+                #return {"Verdict" : "False"}
+                return 0
 
             # Initialization of model
             model_name = "deepset/roberta-base-squad2"
@@ -121,10 +124,11 @@ def bert_run():
             res_query = query
             sim = check_similiarity(str(res['answer']),res_query)
             print("Similiarity = ",sim)
-            if float(sim) >= 0.75:
-                r.set(name=question,value=res['answer'])
-                return { "Verdict" : "True", "Answer" : res}
-            return { "Verdict" : "False", "Answer" : res}
+            return float(sim)
+            # if float(sim) >= 0.75:
+            #     r.set(name=question,value=res['answer'])
+            #     return { "Verdict" : "True", "Answer" : res}
+            # return { "Verdict" : "False", "Answer" : res}
 
             #Uncomment LATER
             #r.set(name=question,value=res['answer'])
