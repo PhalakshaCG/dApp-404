@@ -131,7 +131,7 @@ def bert_run():
             # return { "Verdict" : "False", "Answer" : res}
 
             #Uncomment LATER
-            #r.set(name=question,value=res['answer'])
+            r.set(name=question,value=res['answer'])
             
             #Forget this down
             # return {
